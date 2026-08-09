@@ -111,10 +111,8 @@ if (signupForm) {
       alert("Erreur d'inscription : " + error.message)
       console.error(error)
     } else {
-      alert("Compte créé avec succès ! Bienvenue " + prenom + " !")
-      console.log("Utilisateur inscrit :", data.user)
-      modalOverlay.style.display = 'none'
-      signupForm.reset() // Vide le formulaire
+      // Redirection vers le sous-dossier client/client.html
+      window.location.href = 'client/client.html'
     }
   })
 }
@@ -136,10 +134,8 @@ if (signinForm) {
       alert("Erreur de connexion : " + error.message)
       console.error(error)
     } else {
-      alert("Connexion réussie ! Bienvenue.")
-      console.log("Utilisateur connecté :", data.user)
-      modalOverlay.style.display = 'none'
-      signinForm.reset() // Vide le formulaire
+      // Redirection vers le sous-dossier client/client.html
+      window.location.href = 'client/client.html'
     }
   })
 }
