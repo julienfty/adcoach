@@ -84,24 +84,34 @@ modalOverlay.addEventListener('click', (e) => {
 // SOUMISSION DES FORMULAIRES (SUPABASE)
 // ==========================================
 
-// 1. Gestion de l'Inscription Supabase
+// 1. Gestion de l'Inscription Supabase (avec Nom et Prénom)
 if (signupForm) {
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault()
 
+    // Récupération des 4 champs du formulaire d'inscription
+    const nom = document.getElementById('signup-nom').value
+    const prenom = document.getElementById('signup-prenom').value
     const email = document.getElementById('signup-email').value
     const password = document.getElementById('signup-password').value
 
+    // Envoi à Supabase avec les métadonnées pour le nom et prénom
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
+      options: {
+        data: {
+          nom: nom,
+          prenom: prenom
+        }
+      }
     })
 
     if (error) {
       alert("Erreur d'inscription : " + error.message)
       console.error(error)
     } else {
-      alert("Compte créé avec succès ! Vérifie tes emails si nécessaire.")
+      alert("Compte créé avec succès ! Bienvenue " + prenom + " !")
       console.log("Utilisateur inscrit :", data.user)
       modalOverlay.style.display = 'none'
       signupForm.reset() // Vide le formulaire
