@@ -13,12 +13,11 @@ body, html {
 
 /* --- SECTION HERO (La page d'accueil) --- */
 .hero {
-  /* Remplace 'ton-image.jpg' par ton image réelle */
   background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('fde.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh; /* Occupe toute la hauteur de l'écran */
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,10 +29,10 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Ajouté pour garantir le centrage vertical parfait */
+  justify-content: center;
   gap: 40px;
-  width: 100%;             /* Prend toute la largeur pour bien centrer */
-  padding: 0 20px;         /* Évite que le texte colle aux bords sur mobile */
+  width: 100%;
+  padding: 0 20px;
 }
 
 /* Le titre ADcoach */
@@ -43,23 +42,23 @@ body, html {
   display: inline-block;
   margin: 0 auto;
   position: fixed;
-  transform: translateY(0%);/* Sécurité supplémentaire pour forcer le centrage horizontal */
+  transform: translateY(0%);
 }
 
 /* Le "AD" : Plus grand, en gras maximal (Black) et en italique */
 .brand-ad {
-  font-weight: 900;   /* Équivalent du "Black" en typographie */
-  font-style: italic; /* En italique */
-  font-size: 1.2em;   /* Plus grand que le reste */
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1.2em;
 }
 
 /* Le "coach" : En bold, taille normale/proportionnelle */
 .brand-coach {
-  font-weight: bold;  /* En bold */
+  font-weight: bold;
   font-style: normal;
   font-size: 0.9em;
   font-weight: 700;
-padding-left: 0px;  /* Légèrement plus petit pour contraster avec AD */
+  padding-left: 0px;
 }
 
 /* Conteneur des boutons */
@@ -74,7 +73,7 @@ padding-left: 0px;  /* Légèrement plus petit pour contraster avec AD */
 
 /* Style du bouton principal "s'inscrire" (Orange) */
 #open-popup-btn.btn-primary {
-  background-color: #E95300; /* Couleur orange */
+  background-color: #E95300;
   color: white;
   border: none;
   border-radius: 50px;
@@ -114,8 +113,9 @@ padding-left: 0px;  /* Légèrement plus petit pour contraster avec AD */
 }
 
 .btn-secondary:hover {
-  text-decoration: underline  4px #E95300;
+  text-decoration: underline 4px #E95300;
 }
+
 /* ==============================
    EFFET DECOUVRIR
    ============================== */
@@ -175,7 +175,182 @@ padding-left: 0px;  /* Légèrement plus petit pour contraster avec AD */
   40% {transform: translateY(5px) rotate(45deg);}
   60% {transform: translateY(2px) rotate(45deg);}
 }
-/* --- STYLES DE LA POPUP (Pas de changement majeur) --- */
+
+/* ==============================
+   POPUP DESIGN FIDÈLE
+   ============================== */
+
+.modal-content {
+  background: #E95300;
+  border-radius: 35px;
+  width: 400px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.close-btn:hover {
+  color: #1e293b;
+}
+
+/* En-tête blanc de la popup avec le logo */
+.modal-header-brand {
+  background: white;
+  padding: 5px;
+  text-align: center;
+  font-size: 32px;
+}
+
+.modal-header-brand .brand-ad {
+  font-weight: 900;
+  font-style: italic;
+  color: black;
+  font-size: 2em;
+}
+
+.modal-header-brand .brand-coach {
+  font-weight: 700;
+  color: black;
+  font-size: 1.8em;
+}
+
+/* Barre des onglets (sur fond orange) */
+.modal-tabs {
+  display: flex;
+  background: #E95300;
+  padding: 10px 20px;
+  justify-content: center;
+  gap: 50px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding-bottom: 6px;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab-btn.active {
+  color: white;
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+}
+
+/* Corps blanc contenant les formulaires */
+.modal-form-container {
+  background: white;
+  padding: 30px 35px;
+  display: flex;
+  flex-direction: column;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  min-height: 488px;
+  justify-content: space-between;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 15px;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+/* Étoile en orange */
+.form-group label .required {
+  color: #E95300;
+  margin-left: 2px;
+}
+
+/* Champs de saisie avec ombres douces */
+.form-group input {
+  padding: 12px 14px;
+  border-radius: 15px;
+  border: 4px solid #E95300;
+  background: white;
+  color: #1e293b;
+  font-size: 15px;
+  outline: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.form-group input:focus {
+  border-color: #C34600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Bouton de validation bien en relief */
+.btn-submit {
+  margin-top: 15px;
+  padding: 14px;
+  border-radius: 35px;
+  border: none;
+  background: #E95300;
+  color: white;
+  font-weight: 900;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.btn-submit:hover {
+  background-color: #C34600;
+  transform: translateY(-1px);
+}
+
+.btn-submit:active {
+  transform: translateY(1px);
+}
+
+#signin-form {
+    padding-top: 40px;
+    gap: 20px;
+}
+/* --- OVERLAY DE LA POPUP --- */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -188,49 +363,3 @@ padding-left: 0px;  /* Légèrement plus petit pour contraster avec AD */
   align-items: center;
   z-index: 1000;
 }
-
-.modal-content {
-  background: #1e293b;
-  padding: 30px;
-  border-radius: 12px;
-  position: relative;
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  color: #94a3b8;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  color: white;
-}
-
-input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #475569;
-  background: #0f172a;
-  color: white;
-  font-size: 14px;
-}
-
-form button[type="submit"] {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  background: #22c55e;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
