@@ -7,7 +7,7 @@
 
 body, html {
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
   color: white;
 }
 
@@ -30,16 +30,20 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px; /* Espace entre le titre, les boutons et le lien */
-  width: 90%;
-  max-width: 600px;
+  justify-content: center; /* Ajouté pour garantir le centrage vertical parfait */
+  gap: 40px;
+  width: 100%;             /* Prend toute la largeur pour bien centrer */
+  padding: 0 20px;         /* Évite que le texte colle aux bords sur mobile */
 }
 
 /* Le titre ADcoach */
 .hero-title {
-  font-size: 60px; /* Taille de référence globale */
-  white-space: nowrap; /* Garantit que "ADcoach" reste bien sur la même ligne et forme un bloc unique */
+  font-size: 70px;
+  white-space: nowrap;
   display: inline-block;
+  margin: 0 auto;
+  position: fixed;
+  transform: translateY(0%);/* Sécurité supplémentaire pour forcer le centrage horizontal */
 }
 
 /* Le "AD" : Plus grand, en gras maximal (Black) et en italique */
@@ -53,7 +57,9 @@ body, html {
 .brand-coach {
   font-weight: bold;  /* En bold */
   font-style: normal;
-  font-size: 0.9em;   /* Légèrement plus petit pour contraster avec AD */
+  font-size: 0.9em;
+  font-weight: 700;
+padding-left: 0px;  /* Légèrement plus petit pour contraster avec AD */
 }
 
 /* Conteneur des boutons */
@@ -63,34 +69,36 @@ body, html {
   gap: 10px;
   width: 100%;
   max-width: 350px;
+  margin-top: 400px;
 }
 
 /* Style du bouton principal "s'inscrire" (Orange) */
 #open-popup-btn.btn-primary {
-  background-color: #f95c02; /* Couleur orange */
+  background-color: #E95300; /* Couleur orange */
   color: white;
   border: none;
   border-radius: 50px;
-  padding: 16px 30px;
-  font-size: 24px;
+  padding: 5px 30px;
+  font-size: 40px;
   font-weight: bold;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-weight: 900;
 }
 
 #open-popup-btn.btn-primary:hover {
-  background-color: #e05302;
+  background-color: #C34600;
 }
 
 .btn-subtitle {
   font-size: 12px;
   font-weight: normal;
   text-transform: none;
-  margin-top: -2px;
+  transform: translateY(-6px);
+  margin-bottom: -10px;
 }
 
 /* Style du bouton secondaire "se connecter" (Lien stylisé) */
@@ -106,10 +114,12 @@ body, html {
 }
 
 .btn-secondary:hover {
-  text-decoration: underline;
+  text-decoration: underline  4px #E95300;
 }
+/* ==============================
+   EFFET DECOUVRIR
+   ============================== */
 
-/* Style du lien "découvrir" tout en bas */
 .hero-discover {
   position: absolute;
   bottom: 20px;
@@ -122,13 +132,15 @@ body, html {
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  cursor: pointer;
 }
 
-.hero-discover:hover {
-  color: white;
+.discover-text {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* La flèche qui descend */
 .arrow-down {
   width: 10px;
   height: 10px;
@@ -136,6 +148,25 @@ body, html {
   border-bottom: 2px solid currentColor;
   transform: rotate(45deg);
   animation: bounce 2s infinite;
+  transition: all 0.3s ease;
+}
+
+.hero-discover:hover {
+  color: #E95300;
+}
+
+.hero-discover:hover .discover-text {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.hero-discover:hover .arrow-down {
+  width: 30px;
+  height: 30px;
+  border-right: 4px solid #E95300;
+  border-bottom: 4px solid #E95300;
+  transform: rotate(45deg) translate(2px, 2px);
+  animation: none;
 }
 
 /* Animation de la flèche */
@@ -144,8 +175,6 @@ body, html {
   40% {transform: translateY(5px) rotate(45deg);}
   60% {transform: translateY(2px) rotate(45deg);}
 }
-
-
 /* --- STYLES DE LA POPUP (Pas de changement majeur) --- */
 .modal-overlay {
   position: fixed;
@@ -204,3 +233,4 @@ form button[type="submit"] {
   font-weight: bold;
   cursor: pointer;
 }
+
