@@ -1,7 +1,7 @@
 // ==========================================
 // INSCRIPTION
 // ==========================================
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/+dist/main/index.mjs'
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
 // Initialisation de Supabase
 const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
