@@ -1,6 +1,9 @@
+// ==========================================
+// INSCRIPTION
+// ==========================================
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/+dist/main/index.mjs'
 
-// Initialise Supabase avec tes propres clés (trouvées dans ton dashboard Supabase > Project Settings > API)
+// Initialise Supabase
 const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
 const supabaseAnonKey = 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8'
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
