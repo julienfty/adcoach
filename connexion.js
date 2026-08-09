@@ -1,4 +1,4 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/+dist/main/index.mjs'
 
 // Initialise Supabase avec tes propres clés (trouvées dans ton dashboard Supabase > Project Settings > API)
 const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
