@@ -14,6 +14,9 @@ const openBtn = document.getElementById('open-popup-btn')
 const closeBtn = document.getElementById('close-popup-btn')
 const modalOverlay = document.getElementById('modal-overlay')
 
+// Force la fermeture au chargement immédiat du script
+document.getElementById('modal-overlay').style.display = 'none';
+
 // Ouvrir
 openBtn.addEventListener('click', () => {
   modalOverlay.style.display = 'flex'
