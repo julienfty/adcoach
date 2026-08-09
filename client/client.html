@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Espace Client - ADcoach</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body style="background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+
+  <div style="text-align: center; background: white; color: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 400px;">
+    <h1 style="color: #E95300; margin-bottom: 20px;">Mon Espace Client</h1>
+    <p id="user-welcome" style="font-size: 18px; margin-bottom: 30px; font-weight: bold;">Chargement...</p>
+    
+    <button id="logout-btn" style="background: #E95300; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px;">
+      Se déconnecter
+    </button>
+  </div>
+
+  <!-- Script pour gérer la sécurité et l'affichage de la page client -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+    const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
+    const supabaseAnonKey = 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8'
+    const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+    // Vérification de la session au chargement de la page
+    async function checkAuth() {
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session) {
+        // S'il n'est pas connecté, on le raccompagne à l'accueil !
+        window.location.href = 'index.html'
+        return
+      }
+
+      // Récupérer le prénom stocké dans les métadonnées
+      const user = session.user
+      const prenom = user.user_metadata?.prenom || "Champion"
+      
+      document.getElementById('user-welcome').innerText = `Bienvenue sur ton espace, ${prenom} ! 🔥`
+    }
+
+    checkAuth()
+
+    // Gestion du bouton de déconnexion
+    const logoutBtn = document.getElementById('logout-btn')
+    logoutBtn.addEventListener('click', async () => {
+      await supabase.auth.signOut()
+      window.location.href = 'index.html' // Retour à l'accueil après déconnexion
+    })
+  </script>
+
+</body>
+</html>
