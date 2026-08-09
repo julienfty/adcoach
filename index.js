@@ -3,20 +3,42 @@
 // ==========================================
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/+dist/main/index.mjs'
 
-// Initialise Supabase
+// Initialisation de Supabase
 const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
 const supabaseAnonKey = 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8'
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// --- GESTION DE LA POPUP ---
+const openBtn = document.getElementById('open-popup-btn')
+const closeBtn = document.getElementById('close-popup-btn')
+const modalOverlay = document.getElementById('modal-overlay')
+
+// Ouvrir
+openBtn.addEventListener('click', () => {
+  modalOverlay.style.display = 'flex'
+})
+
+// Fermer
+closeBtn.addEventListener('click', () => {
+  modalOverlay.style.display = 'none'
+})
+
+// Fermer autre
+modalOverlay.addEventListener('click', (e) => {
+  if (e.target === modalOverlay) {
+    modalOverlay.style.display = 'none'
+  }
+})
+
+// --- GESTION DE L'INSCRIPTION SUPABASE ---
 const form = document.getElementById('signup-form')
 
 form.addEventListener('submit', async (e) => {
-  e.preventDefault() // Empêche la page de recharger
+  e.preventDefault()
 
   const email = document.getElementById('signup-email').value
   const password = document.getElementById('signup-password').value
 
-  // Inscription de l'utilisateur
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
@@ -26,8 +48,8 @@ form.addEventListener('submit', async (e) => {
     alert("Erreur : " + error.message)
     console.error(error)
   } else {
-    alert("Compte créé avec succès ! Tu es connecté.")
+    alert("Compte créé avec succès !")
     console.log("Utilisateur :", data.user)
-    // Redirige l'utilisateur vers une autre page ou actualise l'UI
+    modalOverlay.style.display = 'none' // Ferme la popup après succès
   }
 })
