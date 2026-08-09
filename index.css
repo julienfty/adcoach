@@ -37,11 +37,23 @@ body, html {
 
 /* Le titre ADcoach */
 .hero-title {
-  font-size: 64px;
-  font-weight: 900;
-  letter-spacing: -1px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
+  font-size: 60px; /* Taille de référence globale */
+  white-space: nowrap; /* Garantit que "ADcoach" reste bien sur la même ligne et forme un bloc unique */
+  display: inline-block;
+}
+
+/* Le "AD" : Plus grand, en gras maximal (Black) et en italique */
+.brand-ad {
+  font-weight: 900;   /* Équivalent du "Black" en typographie */
+  font-style: italic; /* En italique */
+  font-size: 1.2em;   /* Plus grand que le reste */
+}
+
+/* Le "coach" : En bold, taille normale/proportionnelle */
+.brand-coach {
+  font-weight: bold;  /* En bold */
+  font-style: normal;
+  font-size: 0.9em;   /* Légèrement plus petit pour contraster avec AD */
 }
 
 /* Conteneur des boutons */
