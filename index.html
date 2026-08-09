@@ -4,17 +4,20 @@
   <meta charset="UTF-8">
   <title>ADcoach</title>
   <link rel="stylesheet" href="index.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- SECTION HERO (La page d'accueil avec l'image de fond) -->
+  <!-- TITRE/FOND -->
   <header class="hero">
     <div class="hero-content">
      <h1 class="hero-title">
   <span class="brand-ad">AD</span><span class="brand-coach">coach</span>
 </h1>
       
-      <!-- Tes deux boutons centraux -->
+      <!-- INS/CON -->
       <div class="hero-buttons">
         <button id="open-popup-btn" class="btn-primary">
           s'inscrire
@@ -23,15 +26,15 @@
         <a href="#" class="btn-secondary">se connecter</a>
       </div>
 
-      <!-- Le lien "découvrir" tout en bas -->
+      <!-- EFFET DECOUVRIR -->
       <a href="#" class="hero-discover">
-        découvrir
+        <span class="discover-text">découvrir</span>
         <span class="arrow-down"></span>
       </a>
     </div>
   </header>
 
-  <!-- LA POPUP D'INSCRIPTION (Masquée au chargement) -->
+  <!-- POPUP D'INSCRIPTION -->
   <div id="modal-overlay" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <button id="close-popup-btn" class="close-btn">&times;</button>
@@ -45,7 +48,6 @@
     </div>
   </div>
 
-  <!-- Ton script JavaScript -->
   <script type="module" src="index.js"></script>
 </body>
 </html>
