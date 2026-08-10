@@ -23,61 +23,78 @@
       gap: 50px;
     }
 
-    /* Sidebar gauche */
-    .sidebar { width: 280px; display: flex; flex-direction: column; justify-content: space-between; }
-    .user-info { color: #E95300; font-size: 24px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; }
-    
+    /* La Sidebar typée "Card" */
+    .sidebar-card {
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      width: 300px;
+      border-radius: 20px;
+      padding: 35px 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .user-header { color: #E95300; font-size: 26px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; }
+
     .nav-links { display: flex; flex-direction: column; gap: 10px; }
-    .nav-item { padding: 12px 20px; border-radius: 30px; color: #64748b; font-weight: 600; text-decoration: none; transition: 0.2s; }
-    .nav-item.active { background: #f8fafc; color: #E95300; font-weight: 700; border: 1px solid #f1f5f9; }
-    
-    .btn-logout { background: #fee2e2; color: #dc2626; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; cursor: pointer; }
+    .nav-link { 
+      padding: 12px 18px; border-radius: 12px; color: #64748b; font-weight: 600; 
+      text-decoration: none; transition: all 0.2s; 
+    }
+    .nav-link:hover { background: #f8fafc; color: #E95300; }
+    .nav-link.active { background: #E95300; color: #ffffff; box-shadow: 0 4px 12px rgba(233, 83, 0, 0.3); }
+
+    .btn-logout { 
+      background: #f1f5f9; color: #64748b; border: none; padding: 12px; 
+      border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; 
+    }
+    .btn-logout:hover { background: #fee2e2; color: #dc2626; }
 
     /* Partie droite */
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .welcome-text { font-size: 32px; font-weight: bold; color: #1e293b; text-align: right; margin-bottom: 40px; }
-    .welcome-text span { color: #E95300; }
+    .main-content { flex: 1; display: flex; flex-direction: column; }
+    .title { font-size: 32px; font-weight: bold; color: #1e293b; text-align: right; margin-bottom: 40px; }
+    .title span { color: #E95300; }
 
-    /* Grille au centre */
-    .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .menu-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px; text-decoration: none; transition: 0.2s; }
-    .menu-card:hover { transform: translateY(-5px); border-color: #E95300; box-shadow: 0 10px 15px -3px rgba(233, 83, 0, 0.1); }
-    .icon-box svg { width: 32px; height: 32px; fill: #1e293b; }
-    .menu-card span { font-weight: 700; color: #1e293b; font-size: 14px; }
+    /* Grille des icônes */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px; text-decoration: none; transition: 0.2s; }
+    .card:hover { border-color: #E95300; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    .icon svg { width: 32px; height: 32px; fill: #1e293b; }
+    .card span { font-weight: 700; color: #1e293b; font-size: 14px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
+    <!-- Sidebar design Card -->
+    <div class="sidebar-card">
       <div>
-        <h2 class="user-info" id="user-fullname">Chargement...</h2>
+        <h2 class="user-header" id="user-fullname">...</h2>
         <nav class="nav-links">
-          <a href="#" class="nav-item active">accueil</a>
-          <a href="#" class="nav-item">progression</a>
-          <a href="#" class="nav-item">programme</a>
-          <a href="#" class="nav-item">nutrition</a>
-          <a href="#" class="nav-item">messagerie</a>
-          <a href="#" class="nav-item">contrat</a>
-          <a href="#" class="nav-item">paramètre</a>
+          <a href="client.html" class="nav-link active">accueil</a>
+          <a href="progression.html" class="nav-link">progression</a>
+          <a href="programme.html" class="nav-link">programme</a>
+          <a href="nutrition.html" class="nav-link">nutrition</a>
+          <a href="messagerie.html" class="nav-link">messagerie</a>
+          <a href="contrat.html" class="nav-link">contrat</a>
+          <a href="parametre.html" class="nav-link">paramètre</a>
         </nav>
       </div>
       <button id="btn-logout" class="btn-logout">Se déconnecter</button>
     </div>
 
-    <!-- Main -->
-    <div class="main">
-      <h1 class="welcome-text">Bonjour, <span id="user-prenom">...</span></h1>
-      
-      <div class="menu-grid">
-        <!-- Tes 6 icônes -->
-        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div><span>progression</span></a>
-        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg></div><span>programme</span></a>
-        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg></div><span>nutrition</span></a>
-        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg></div><span>messagerie</span></a>
-        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><span>contrat</span></a>
-        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div><span>paramètre</span></a>
+    <!-- Contenu -->
+    <div class="main-content">
+      <h1 class="title">Bonjour, <span id="user-prenom">...</span></h1>
+      <div class="grid">
+        <a href="progression.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div><span>progression</span></a>
+        <a href="programme.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg></div><span>programme</span></a>
+        <a href="nutrition.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg></div><span>nutrition</span></a>
+        <a href="messagerie.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg></div><span>messagerie</span></a>
+        <a href="contrat.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><span>contrat</span></a>
+        <a href="parametre.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div><span>paramètre</span></a>
       </div>
     </div>
   </div>
