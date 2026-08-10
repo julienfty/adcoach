@@ -9,8 +9,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background-color: #f8fafc; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Inter', sans-serif; }
-
-    /* Conteneur principal */
+    
     .container {
       background: #ffffff;
       width: 1000px;
@@ -23,7 +22,6 @@
       gap: 50px;
     }
 
-    /* La Sidebar typée "Card" */
     .sidebar-card {
       background: #ffffff;
       border: 1px solid #f1f5f9;
@@ -51,13 +49,11 @@
       border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; 
     }
     .btn-logout:hover { background: #fee2e2; color: #dc2626; }
-
-    /* Partie droite */
+    
     .main-content { flex: 1; display: flex; flex-direction: column; }
     .title { font-size: 32px; font-weight: bold; color: #1e293b; text-align: right; margin-bottom: 40px; }
     .title span { color: #E95300; }
 
-    /* Grille des icônes */
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px; text-decoration: none; transition: 0.2s; }
     .card:hover { border-color: #E95300; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
@@ -68,7 +64,6 @@
 <body>
 
   <div class="container">
-    <!-- Sidebar design Card -->
     <div class="sidebar-card">
       <div>
         <h2 class="user-header" id="user-fullname">...</h2>
@@ -85,7 +80,6 @@
       <button id="btn-logout" class="btn-logout">Se déconnecter</button>
     </div>
 
-    <!-- Contenu -->
     <div class="main-content">
       <h1 class="title">Bonjour, <span id="user-prenom">...</span></h1>
       <div class="grid">
