@@ -22,7 +22,6 @@
       font-family: 'Inter', sans-serif;
     }
 
-    /* Conteneur principal global */
     .client-container {
       background: #ffffff;
       width: 1000px;
@@ -36,7 +35,6 @@
       position: relative;
     }
 
-    /* Sidebar de gauche */
     .sidebar-card {
       background: #ffffff;
       border: 1px solid #f1f5f9;
@@ -84,8 +82,7 @@
       background: #fee2e2;
       color: #dc2626;
     }
-
-    /* Partie droite */
+    
     .main-content {
       flex: 1;
       display: flex;
@@ -105,7 +102,6 @@
       color: #E95300;
     }
 
-    /* Contenu de la zone client */
     .client-content-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -137,7 +133,7 @@
 <body>
 
   <div class="client-container">
-    <!-- Sidebar gauche -->
+
     <div class="sidebar-card">
       <div class="sidebar-top">
         <h2>Mon Espace</h2>
@@ -146,18 +142,17 @@
       <button id="btn-logout" class="btn-logout">Se déconnecter</button>
     </div>
 
-    <!-- Contenu droit -->
     <div class="main-content">
       <h1 class="welcome-title">Bonjour, <span id="user-prenom">Chargement...</span></h1>
       
       <div class="client-content-box">
         <h3>Ton programme est en cours de préparation</h3>
         <p>Toutes les étapes de validation sont complétées avec succès. Ton espace personnalisé s'affiche ici.</p>
+        <a href="tableau.html">version teste : espace client (clique)</a>
       </div>
     </div>
   </div>
 
-  <!-- Script de sécurité, de vérification des accès et de chargement -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -166,7 +161,7 @@
     const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
     async function checkAccessAndLoadClient() {
-      // 1. Vérification de la session active
+
       const { data: { session } } = await supabase.auth.getSession()
 
       if (!session) {
@@ -178,7 +173,6 @@
       const prenom = session.user.user_metadata?.prenom || "Champion"
       document.getElementById('user-prenom').innerText = prenom
 
-      // 2. Récupération des données dans la table 'profiles'
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('questionnaire, payement, statut_abonnement')
@@ -190,13 +184,11 @@
         return
       }
 
-      // 3. Redirection 1 : S'il n'a pas rempli le questionnaire
       if (!profile.questionnaire) {
         window.location.href = 'questionnaire.html'
         return
       }
-
-      // 4. Redirection 2 : S'il n'a pas payé OU si l'abonnement est résilié
+      
       const isPaye = profile.payement === true
       const statutAbo = profile.statut_abonnement
 
@@ -208,7 +200,6 @@
 
     checkAccessAndLoadClient()
 
-    // Gestion du bouton de déconnexion
     document.getElementById('btn-logout').addEventListener('click', async () => {
       await supabase.auth.signOut()
       window.location.href = '../index.html'
