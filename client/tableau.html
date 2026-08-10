@@ -22,8 +22,8 @@
       font-family: 'Inter', sans-serif;
     }
 
-    /* Conteneur principal global (identique à la page de paiement) */
-    .dashboard-container {
+    /* Conteneur principal global */
+    .client-container {
       background: #ffffff;
       width: 1000px;
       max-width: 95%;
@@ -34,144 +34,122 @@
       padding: 35px;
       gap: 50px;
       position: relative;
-      overflow: hidden;
     }
 
-    /* Sidebar de gauche avec effet creusé/arrondi pour l'élément actif */
-    .sidebar {
-      width: 260px;
+    /* Sidebar de gauche */
+    .sidebar-card {
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      width: 300px;
+      border-radius: 20px;
+      padding: 35px 25px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding-right: 10px;
     }
 
     .sidebar-top {
       display: flex;
       flex-direction: column;
-      gap: 25px;
+      gap: 20px;
     }
 
-    .sidebar-title {
+    .sidebar-card h2 {
       color: #E95300;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 900;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    /* Liste des liens de navigation */
-    .nav-links {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .nav-item {
-      padding: 12px 20px;
-      border-radius: 30px;
+    .sidebar-card p {
       color: #64748b;
-      font-weight: 600;
-      font-size: 15px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
+      font-size: 13px;
+      line-height: 1.6;
     }
 
-    /* Élément actif (style creusé/blanc avec ombre douce comme sur ton modèle) */
-    .nav-item.active {
-      background-color: #ffffff;
-      color: #E95300;
-      font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-      border: 1px solid #f1f5f9;
-      transform: translateX(5px);
-    }
-
-    .nav-item:hover:not(.active) {
-      color: #1e293b;
-      background-color: #f1f5f9;
-    }
-
-    /* Bouton déconnexion */
     .btn-logout {
-      background: #ff6b6b;
-      color: white;
+      background: #f1f5f9;
+      color: #64748b;
       border: none;
-      padding: 12px 25px;
-      border-radius: 30px;
+      padding: 10px 20px;
+      border-radius: 20px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 13px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.35);
       transition: all 0.2s ease;
-      text-align: center;
-      width: 100%;
+      align-self: flex-start;
     }
 
     .btn-logout:hover {
-      background: #fa5252;
-      transform: translateY(-1px);
+      background: #fee2e2;
+      color: #dc2626;
     }
 
-    /* Partie droite : Contenu principal */
+    /* Partie droite */
     .main-content {
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding-top: 20px;
+      justify-content: space-between;
     }
 
     .welcome-title {
-      font-size: 38px;
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: bold;
       color: #1e293b;
-      margin-bottom: 50px;
-      text-align: center;
+      text-align: right;
+      margin-bottom: 20px;
     }
 
     .welcome-title span {
       color: #E95300;
-      font-weight: 900;
     }
 
-    /* Grille des icônes du dashboard */
+    /* Conteneur de droite (la grande boîte) avec la grille d'icônes à l'intérieur */
+    .client-content-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 30px;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Grille des icônes */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
+      gap: 20px;
       width: 100%;
-      max-width: 580px;
+      max-width: 500px;
     }
 
     .menu-card {
       background: #ffffff;
-      border: 1px solid #f1f5f9;
-      border-radius: 20px;
-      padding: 25px 15px;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      gap: 10px;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
       text-decoration: none;
     }
 
     .menu-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 30px rgba(233, 83, 0, 0.12);
-      border-color: #ffd8cc;
+      transform: translateY(-2px);
+      border-color: #E95300;
+      box-shadow: 0 8px 20px rgba(233, 83, 0, 0.1);
     }
 
     .icon-box {
-      width: 50px;
-      height: 50px;
+      width: 36px;
+      height: 36px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -179,13 +157,13 @@
     }
 
     .icon-box svg {
-      width: 36px;
-      height: 36px;
+      width: 30px;
+      height: 30px;
       fill: currentColor;
     }
 
     .menu-card span {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: #1e293b;
     }
@@ -193,83 +171,75 @@
 </head>
 <body>
 
-  <div class="dashboard-container">
-    <!-- Sidebar de gauche -->
-    <div class="sidebar">
+  <div class="client-container">
+    <!-- Sidebar gauche -->
+    <div class="sidebar-card">
       <div class="sidebar-top">
-        <h2 class="sidebar-title" id="sidebar-nom">NOM</h2>
-        <div class="nav-links">
-          <a href="client.html" class="nav-item active">accueil</a>
-          <a href="progression.html" class="nav-item">progression</a>
-          <a href="programme.html" class="nav-item">programe</a>
-          <a href="nutrition.html" class="nav-item">nutrition</a>
-          <a href="messagerie.html" class="nav-item">messagerie</a>
-          <a href="contrat.html" class="nav-item">contrat</a>
-          <a href="parametre.html" class="nav-item">paramètre</a>
-        </div>
+        <h2>Mon Espace</h2>
+        <p>Retrouve ton programme personnalisé ainsi que tous tes services actifs.</p>
       </div>
-      <div>
-        <button id="btn-deconnexion" class="btn-logout">deconnexion</button>
-      </div>
+      <button id="btn-logout" class="btn-logout">Se déconnecter</button>
     </div>
 
     <!-- Contenu droit -->
     <div class="main-content">
       <h1 class="welcome-title">Bonjour, <span id="user-prenom">Chargement...</span></h1>
       
-      <div class="menu-grid">
-        <!-- Carte Progression -->
-        <a href="progression.html" class="menu-card">
-          <div class="icon-box">
-            <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-          </div>
-          <span>progression</span>
-        </a>
+      <div class="client-content-box">
+        <div class="menu-grid">
+          <!-- Progression -->
+          <a href="progression.html" class="menu-card">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+            </div>
+            <span>progression</span>
+          </a>
 
-        <!-- Carte Programme -->
-        <a href="programme.html" class="menu-card">
-          <div class="icon-box">
-            <svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg>
-          </div>
-          <span>programme</span>
-        </a>
+          <!-- Programme -->
+          <a href="programme.html" class="menu-card">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg>
+            </div>
+            <span>programme</span>
+          </a>
 
-        <!-- Carte Nutrition -->
-        <a href="nutrition.html" class="menu-card">
-          <div class="icon-box">
-            <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg>
-          </div>
-          <span>nutrition</span>
-        </a>
+          <!-- Nutrition -->
+          <a href="nutrition.html" class="menu-card">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg>
+            </div>
+            <span>nutrition</span>
+          </a>
 
-        <!-- Carte Messagerie -->
-        <a href="messagerie.html" class="menu-card">
-          <div class="icon-box">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          </div>
-          <span>messagerie</span>
-        </a>
+          <!-- Messagerie -->
+          <a href="messagerie.html" class="menu-card">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            </div>
+            <span>messagerie</span>
+          </a>
 
-        <!-- Carte Contrat -->
-        <a href="contrat.html" class="menu-card">
-          <div class="icon-box">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-          </div>
-          <span>contrat</span>
-        </a>
+          <!-- Contrat -->
+          <a href="contrat.html" class="menu-card">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            </div>
+            <span>contrat</span>
+          </a>
 
-        <!-- Carte Paramètre -->
-        <a href="parametre.html" class="menu-card">
-          <div class="icon-box">
-            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-          </div>
-          <span>paramètre</span>
-        </a>
+          <!-- Paramètre -->
+          <a href="parametre.html" class="menu-card">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            </div>
+            <span>paramètre</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Script Supabase & Logique -->
+  <!-- Script Supabase & Sécurité -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -277,8 +247,7 @@
     const supabaseAnonKey = 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8'
     const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-    // Chargement dynamique du profil utilisateur depuis Supabase
-    async function loadUserProfile() {
+    async function checkAccessAndLoadClient() {
       const { data: { session } } = await supabase.auth.getSession()
 
       if (!session) {
@@ -286,19 +255,35 @@
         return
       }
 
-      const user = session.user
-      const prenom = user.user_metadata?.prenom || "Champion"
-      const nom = user.user_metadata?.nom || "NOM"
-
+      const userId = session.user.id
+      const prenom = session.user.user_metadata?.prenom || "Champion"
       document.getElementById('user-prenom').innerText = prenom
-      document.getElementById('sidebar-nom').innerText = `${prenom} ${nom.toUpperCase()}`
+
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('questionnaire, payement, statut_abonnement')
+        .eq('id', userId)
+        .single()
+
+      if (error || !profile) return
+
+      if (!profile.questionnaire) {
+        window.location.href = 'questionnaire.html'
+        return
+      }
+
+      const isPaye = profile.payement === true
+      const statutAbo = profile.statut_abonnement
+
+      if (!isPaye || statutAbo === 'resilie') {
+        window.location.href = 'payment.html'
+        return
+      }
     }
 
-    loadUserProfile()
+    checkAccessAndLoadClient()
 
-    // Gestion de la déconnexion
-    const btnDeconnexion = document.getElementById('btn-deconnexion')
-    btnDeconnexion.addEventListener('click', async () => {
+    document.getElementById('btn-logout').addEventListener('click', async () => {
       await supabase.auth.signOut()
       window.location.href = '../index.html'
     })
