@@ -7,23 +7,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #f8fafc; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Inter', sans-serif; }
 
-    body {
-      background-color: #f8fafc;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* Conteneur principal global */
-    .client-container {
+    /* Conteneur principal */
+    .container {
       background: #ffffff;
       width: 1000px;
       max-width: 95%;
@@ -33,261 +21,82 @@
       display: flex;
       padding: 35px;
       gap: 50px;
-      position: relative;
     }
 
-    /* Sidebar de gauche */
-    .sidebar-card {
-      background: #ffffff;
-      border: 1px solid #f1f5f9;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-      width: 300px;
-      border-radius: 20px;
-      padding: 35px 25px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .sidebar-top {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .sidebar-card h2 {
-      color: #E95300;
-      font-size: 28px;
-      font-weight: 900;
-    }
-
-    .sidebar-card p {
-      color: #64748b;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .btn-logout {
-      background: #f1f5f9;
-      color: #64748b;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      align-self: flex-start;
-    }
-
-    .btn-logout:hover {
-      background: #fee2e2;
-      color: #dc2626;
-    }
+    /* Sidebar gauche */
+    .sidebar { width: 280px; display: flex; flex-direction: column; justify-content: space-between; }
+    .user-info { color: #E95300; font-size: 24px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; }
+    
+    .nav-links { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item { padding: 12px 20px; border-radius: 30px; color: #64748b; font-weight: 600; text-decoration: none; transition: 0.2s; }
+    .nav-item.active { background: #f8fafc; color: #E95300; font-weight: 700; border: 1px solid #f1f5f9; }
+    
+    .btn-logout { background: #fee2e2; color: #dc2626; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; cursor: pointer; }
 
     /* Partie droite */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .welcome-text { font-size: 32px; font-weight: bold; color: #1e293b; text-align: right; margin-bottom: 40px; }
+    .welcome-text span { color: #E95300; }
 
-    .welcome-title {
-      font-size: 32px;
-      font-weight: bold;
-      color: #1e293b;
-      text-align: right;
-      margin-bottom: 20px;
-    }
-
-    .welcome-title span {
-      color: #E95300;
-    }
-
-    /* Conteneur de droite (la grande boîte) avec la grille d'icônes à l'intérieur */
-    .client-content-box {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 30px;
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Grille des icônes */
-    .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      width: 100%;
-      max-width: 500px;
-    }
-
-    .menu-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 20px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .menu-card:hover {
-      transform: translateY(-2px);
-      border-color: #E95300;
-      box-shadow: 0 8px 20px rgba(233, 83, 0, 0.1);
-    }
-
-    .icon-box {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #1e293b;
-    }
-
-    .icon-box svg {
-      width: 30px;
-      height: 30px;
-      fill: currentColor;
-    }
-
-    .menu-card span {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1e293b;
-    }
+    /* Grille au centre */
+    .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .menu-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px; text-decoration: none; transition: 0.2s; }
+    .menu-card:hover { transform: translateY(-5px); border-color: #E95300; box-shadow: 0 10px 15px -3px rgba(233, 83, 0, 0.1); }
+    .icon-box svg { width: 32px; height: 32px; fill: #1e293b; }
+    .menu-card span { font-weight: 700; color: #1e293b; font-size: 14px; }
   </style>
 </head>
 <body>
 
-  <div class="client-container">
-    <!-- Sidebar gauche -->
-    <div class="sidebar-card">
-      <div class="sidebar-top">
-        <h2>Mon Espace</h2>
-        <p>Retrouve ton programme personnalisé ainsi que tous tes services actifs.</p>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div>
+        <h2 class="user-info" id="user-fullname">Chargement...</h2>
+        <nav class="nav-links">
+          <a href="#" class="nav-item active">accueil</a>
+          <a href="#" class="nav-item">progression</a>
+          <a href="#" class="nav-item">programme</a>
+          <a href="#" class="nav-item">nutrition</a>
+          <a href="#" class="nav-item">messagerie</a>
+          <a href="#" class="nav-item">contrat</a>
+          <a href="#" class="nav-item">paramètre</a>
+        </nav>
       </div>
       <button id="btn-logout" class="btn-logout">Se déconnecter</button>
     </div>
 
-    <!-- Contenu droit -->
-    <div class="main-content">
-      <h1 class="welcome-title">Bonjour, <span id="user-prenom">Chargement...</span></h1>
+    <!-- Main -->
+    <div class="main">
+      <h1 class="welcome-text">Bonjour, <span id="user-prenom">...</span></h1>
       
-      <div class="client-content-box">
-        <div class="menu-grid">
-          <!-- Progression -->
-          <a href="progression.html" class="menu-card">
-            <div class="icon-box">
-              <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-            </div>
-            <span>progression</span>
-          </a>
-
-          <!-- Programme -->
-          <a href="programme.html" class="menu-card">
-            <div class="icon-box">
-              <svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg>
-            </div>
-            <span>programme</span>
-          </a>
-
-          <!-- Nutrition -->
-          <a href="nutrition.html" class="menu-card">
-            <div class="icon-box">
-              <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg>
-            </div>
-            <span>nutrition</span>
-          </a>
-
-          <!-- Messagerie -->
-          <a href="messagerie.html" class="menu-card">
-            <div class="icon-box">
-              <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg>
-            </div>
-            <span>messagerie</span>
-          </a>
-
-          <!-- Contrat -->
-          <a href="contrat.html" class="menu-card">
-            <div class="icon-box">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-            </div>
-            <span>contrat</span>
-          </a>
-
-          <!-- Paramètre -->
-          <a href="parametre.html" class="menu-card">
-            <div class="icon-box">
-              <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-            </div>
-            <span>paramètre</span>
-          </a>
-        </div>
+      <div class="menu-grid">
+        <!-- Tes 6 icônes -->
+        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div><span>progression</span></a>
+        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg></div><span>programme</span></a>
+        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg></div><span>nutrition</span></a>
+        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg></div><span>messagerie</span></a>
+        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><span>contrat</span></a>
+        <a href="#" class="menu-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div><span>paramètre</span></a>
       </div>
     </div>
   </div>
 
-  <!-- Script Supabase & Sécurité -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+    const supabase = createClient('https://gyojzwmknilkglcywvck.supabase.co', 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8')
 
-    const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
-    const supabaseAnonKey = 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8'
-    const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-    async function checkAccessAndLoadClient() {
+    async function load() {
       const { data: { session } } = await supabase.auth.getSession()
-
-      if (!session) {
-        window.location.href = '../index.html'
-        return
-      }
-
-      const userId = session.user.id
-      const prenom = session.user.user_metadata?.prenom || "Champion"
-      document.getElementById('user-prenom').innerText = prenom
-
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('questionnaire, payement, statut_abonnement')
-        .eq('id', userId)
-        .single()
-
-      if (error || !profile) return
-
-      if (!profile.questionnaire) {
-        window.location.href = 'questionnaire.html'
-        return
-      }
-
-      const isPaye = profile.payement === true
-      const statutAbo = profile.statut_abonnement
-
-      if (!isPaye || statutAbo === 'resilie') {
-        window.location.href = 'payment.html'
-        return
+      if (session) {
+        const p = session.user.user_metadata?.prenom || "Champion"
+        const n = session.user.user_metadata?.nom || "NOM"
+        document.getElementById('user-prenom').innerText = p
+        document.getElementById('user-fullname').innerText = `${p} ${n.toUpperCase()}`
       }
     }
-
-    checkAccessAndLoadClient()
-
-    document.getElementById('btn-logout').addEventListener('click', async () => {
-      await supabase.auth.signOut()
-      window.location.href = '../index.html'
-    })
+    load()
+    document.getElementById('btn-logout').onclick = () => { supabase.auth.signOut(); window.location.href = '../index.html'; }
   </script>
-
 </body>
 </html>
