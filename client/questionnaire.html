@@ -64,6 +64,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      overflow: hidden;
     }
 
     .welcome-title {
@@ -78,10 +79,25 @@
       color: #E95300;
     }
 
-    .questions-list {
-      display: flex;
+    .step-container {
+      display: none;
       flex-direction: column;
       gap: 12px;
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 5px;
+    }
+
+    .step-container.active {
+      display: flex;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #E95300;
+      margin-bottom: 4px;
+      text-transform: uppercase;
     }
 
     .question-group {
@@ -93,7 +109,7 @@
     .question-group label {
       font-weight: bold;
       color: #1e293b;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     .question-group input {
@@ -125,6 +141,7 @@
       cursor: pointer;
       box-shadow: 0 6px 15px rgba(233, 83, 0, 0.35);
       transition: background-color 0.2s ease, transform 0.1s ease;
+      margin-top: 15px;
     }
 
     .btn-suivant:hover {
@@ -142,35 +159,151 @@
   <div class="questionnaire-container">
     <div class="sidebar-card">
       <h2>Questionnaire</h2>
-      <p>ce questionnaire permet de mieux perfectionné la création ton programme personnalisé.</p>
-      <p>à l'issue de ce questionnaire tes réponses seront envoyées pour créer ton programme.*</p>
+      <p>ce questionnaire permet de mieux perfectionner la création de ton programme personnalisé.</p>
+      <p>à l'issue de ce questionnaire tes réponses seront envoyées pour créer ton programme.</p>
     </div>
     
     <div class="main-content">
       <h1 class="welcome-title">Bonjour, <span id="user-prenom">Chargement...</span></h1>
-      <form id="questionnaire-form" class="questions-list">
-        <div class="question-group">
-          <label>question n1</label>
-          <input type="text" required />
-        </div>
-        <div class="question-group">
-          <label>question n2</label>
-          <input type="text" required />
-        </div>
-        <div class="question-group">
-          <label>question n3</label>
-          <input type="text" required />
-        </div>
-        <div class="question-group">
-          <label>question n4</label>
-          <input type="text" required />
-        </div>
-        <div class="question-group">
-          <label>question n5</label>
-          <input type="text" required />
-        </div>
+      
+      <form id="questionnaire-form" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
         
-        <button type="submit" class="btn-suivant">suivant</button>
+        <!-- ÉTAPE 1 -->
+        <div class="step-container active" id="step-1">
+          <div class="step-title">1) Informations générales</div>
+          <div class="question-group">
+            <label>Quel est ton âge ?</label>
+            <input type="text" id="age" required />
+          </div>
+          <div class="question-group">
+            <label>Quelle est ta taille ?</label>
+            <input type="text" id="taille" required />
+          </div>
+          <div class="question-group">
+            <label>Quel est ton poids actuel ?</label>
+            <input type="text" id="poid_initiale" required />
+          </div>
+          <div class="question-group">
+            <label>Quel est ton métier ?</label>
+            <input type="text" id="metier" required />
+          </div>
+          <div class="question-group">
+            <label>Quel est ton type de métier (actif ou sédentaire) ?</label>
+            <input type="text" id="type_metier" required />
+          </div>
+          <button type="button" class="btn-suivant" onclick="nextStep(1)">Suivant</button>
+        </div>
+
+        <!-- ÉTAPE 2 -->
+        <div class="step-container" id="step-2">
+          <div class="step-title">2) Objectif</div>
+          <div class="question-group">
+            <label>Quel est ton objectif principal ? (perte de poids, prise de muscle...)</label>
+            <input type="text" id="objectif" required />
+          </div>
+          <div class="question-group">
+            <label>As-tu un objectif de poids ou de physique précis ?</label>
+            <input type="text" id="but" required />
+          </div>
+          <div class="question-group">
+            <label>Combien de séances peux-tu réaliser par semaine ?</label>
+            <input type="text" id="nseance" required />
+          </div>
+          <button type="button" class="btn-suivant" onclick="nextStep(2)">Suivant</button>
+        </div>
+
+        <!-- ÉTAPE 3 -->
+        <div class="step-container" id="step-3">
+          <div class="step-title">3) Santé</div>
+          <div class="question-group">
+            <label>As-tu des blessures ou des douleurs actuelles ? (oui/non)</label>
+            <input type="text" id="blessure" required />
+          </div>
+          <div class="question-group">
+            <label>Quel type de blessure as-tu ? (optionnel)</label>
+            <input type="text" id="type_blessure" />
+          </div>
+          <div class="question-group">
+            <label>As-tu des problèmes de santé ? (oui/non)</label>
+            <input type="text" id="santé" required />
+          </div>
+          <div class="question-group">
+            <label>Quel type de problème de santé as-tu ? (optionnel)</label>
+            <input type="text" id="type_santé" />
+          </div>
+          <div class="question-group">
+            <label>Prends-tu des médicaments ? (oui/non)</label>
+            <input type="text" id="medicament" required />
+          </div>
+          <div class="question-group">
+            <label>Quels sont ces médicaments ? (optionnel)</label>
+            <input type="text" id="type_medicament" />
+          </div>
+          <button type="button" class="btn-suivant" onclick="nextStep(3)">Suivant</button>
+        </div>
+
+        <!-- ÉTAPE 4 -->
+        <div class="step-container" id="step-4">
+          <div class="step-title">4) Habitude de vie</div>
+          <div class="question-group">
+            <label>Combien d'heures dors-tu par nuit ?</label>
+            <input type="text" id="sommeil" required />
+          </div>
+          <div class="question-group">
+            <label>Comment évalues-tu ton niveau de stress ?</label>
+            <input type="text" id="stress" required />
+          </div>
+          <div class="question-group">
+            <label>Consommes-tu de l'alcool ? (oui/non)</label>
+            <input type="text" id="alcool" required />
+          </div>
+          <div class="question-group">
+            <label>Consommes-tu du tabac ? (oui/non)</label>
+            <input type="text" id="tabac" required />
+          </div>
+          <button type="button" class="btn-suivant" onclick="nextStep(4)">Suivant</button>
+        </div>
+
+        <!-- ÉTAPE 5 -->
+        <div class="step-container" id="step-5">
+          <div class="step-title">5) Habitude alimentaire</div>
+          <div class="question-group">
+            <label>Combien de repas prends-tu par jour ?</label>
+            <input type="text" id="nrepas" required />
+          </div>
+          <div class="question-group">
+            <label>Prends-tu un petit déjeuner ? (oui/non)</label>
+            <input type="text" id="dejeuner" required />
+          </div>
+          <div class="question-group">
+            <label>Manges-tu souvent à l'extérieur ou dans des fast-foods ? (oui/non)</label>
+            <input type="text" id="fastfood" required />
+          </div>
+          <div class="question-group">
+            <label>Grignotes-tu entre les repas ? (oui/non)</label>
+            <input type="text" id="grignote" required />
+          </div>
+          <div class="question-group">
+            <label>Combien bois-tu d'eau par jour ?</label>
+            <input type="text" id="eau" required />
+          </div>
+          <button type="button" class="btn-suivant" onclick="nextStep(5)">Suivant</button>
+        </div>
+
+        <!-- ÉTAPE 6 -->
+        <div class="step-container" id="step-6">
+          <div class="step-title">6) Préférence alimentaire</div>
+          <div class="question-group">
+            <label>Y a-t-il des aliments que tu n'aimes pas ?</label>
+            <input type="text" id="pref" required />
+          </div>
+          <div class="question-group">
+            <label>As-tu des allergies ou des intolérances alimentaires ?</label>
+            <input type="text" id="restriction" required />
+          </div>
+          <button type="submit" class="btn-suivant">Valider et payer</button>
+        </div>
+
       </form>
     </div>
   </div>
@@ -192,11 +325,37 @@
       
       const user = session.user
       const prenom = user.user_metadata?.prenom || "Champion"
-      
       document.getElementById('user-prenom').innerText = prenom
     }
 
     checkAuthAndLoadUser()
+
+    // Gestion du passage d'une étape à l'autre avec vérification des champs requis
+    window.nextStep = function(currentStepNumber) {
+      const currentStepElement = document.getElementById(`step-${currentStepNumber}`);
+      const inputs = currentStepElement.querySelectorAll('input[required]');
+      
+      let isValid = true;
+      inputs.forEach(input => {
+        if (!input.value.trim()) {
+          isValid = false;
+          input.style.borderColor = '#dc2626';
+        } else {
+          input.style.borderColor = '#e2e8f0';
+        }
+      });
+
+      if (!isValid) {
+        alert("Veuillez remplir tous les champs obligatoires de cette étape.");
+        return;
+      }
+
+      currentStepElement.classList.remove('active');
+      const nextStepElement = document.getElementById(`step-${currentStepNumber + 1}`);
+      if (nextStepElement) {
+        nextStepElement.classList.add('active');
+      }
+    }
 
     const form = document.getElementById('questionnaire-form')
     form.addEventListener('submit', async (e) => {
@@ -205,13 +364,64 @@
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
 
-      const { error } = await supabase
+      const userId = session.user.id
+
+      // Fonction utilitaire pour convertir les "oui"/"non" en booléens si nécessaire, ou laisser en texte
+      const getVal = (id) => document.getElementById(id).value.trim()
+      const getBool = (id) => {
+        const val = document.getElementById(id).value.trim().toLowerCase()
+        return val === 'oui' || val === 'yes' || val === 'true' || val === '1'
+      }
+
+      // 1. Enregistrement des détails dans la table "profils_details"
+      const detailsData = {
+        user_id: userId,
+        age: getVal('age'),
+        taille: getVal('taille'),
+        poid_initiale: getVal('poid_initiale'),
+        metier: getVal('metier'),
+        type_metier: getVal('type_metier'),
+        objectif: getVal('objectif'),
+        but: getVal('but'),
+        nseance: getVal('nseance'),
+        blessure: getBool('blessure'),
+        type_blessure: getVal('type_blessure'),
+        santé: getBool('santé'),
+        type_santé: getVal('type_santé'),
+        medicament: getBool('medicament'),
+        type_medicament: getVal('type_medicament'),
+        sommeil: getVal('sommeil'),
+        stress: getVal('stress'),
+        alcool: getBool('alcool'),
+        tabac: getBool('tabac'),
+        nrepas: getVal('nrepas'),
+        dejeuner: getBool('dejeuner'),
+        fastfood: getBool('fastfood'),
+        grignote: getBool('grignote'),
+        eau: getVal('eau'),
+        pref: getVal('pref'),
+        restriction: getVal('restriction')
+      }
+
+      // Upsert pour insérer ou mettre à jour si la ligne existe déjà
+      const { error: errorDetails } = await supabase
+        .from('profils_details')
+        .upsert(detailsData)
+
+      if (errorDetails) {
+        console.error("Erreur enregistrement détails :", errorDetails)
+        alert("Une erreur est survenue lors de l'enregistrement des détails.")
+        return
+      }
+
+      // 2. Mettre à jour le statut questionnaire à true dans la table "profiles"
+      const { error: errorProfile } = await supabase
         .from('profiles')
         .update({ questionnaire: true })
-        .eq('id', session.user.id)
+        .eq('id', userId)
 
-      if (error) {
-        console.error("Erreur lors de la mise à jour :", error)
+      if (errorProfile) {
+        console.error("Erreur mise à jour profil :", errorProfile)
         alert("Une erreur est survenue.")
       } else {
         window.location.href = 'payement.html'
