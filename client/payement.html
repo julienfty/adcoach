@@ -260,6 +260,33 @@
     .btn-modal-yes:hover {
       background: #b91c1c;
     }
+    /* Style par défaut des cartes */
+    .offer-card {
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      /* On ajoute une transition fluide pour l'ombre et la bordure */
+      transition: all 0.3s ease; 
+      border: 3px solid transparent; /* Bordure invisible par défaut */
+    }
+
+    /* Style quand la carte est sélectionnée (Orange) */
+    .offer-card.orange {
+      background-color: #E95300;
+      color: white;
+      border-color: #ff8c4d; /* Une bordure plus claire pour marquer le coup */
+      box-shadow: 0 10px 25px rgba(233, 83, 0, 0.4);
+      transform: scale(1.02); /* Petit zoom léger sur la sélection */
+    }
+
+    /* Style quand la carte n'est PAS sélectionnée (Blanche) */
+    .offer-card.white {
+      background-color: #ffffff;
+      border: 3px solid #e2e8f0; /* Bordure grise pour la carte inactive */
+      box-shadow: none;
+      color: #1e293b;
+      transform: scale(1);
+    }
   </style>
 </head>
 <body>
@@ -276,18 +303,17 @@
       <h1 class="welcome-title">Bonjour, <span id="user-prenom">Chargement...</span></h1>
       
       <div class="offers-list">
-        <!-- Option 1 -->
-        <div class="offer-card orange">
-          <h3>Payé 149€ en une seule fois</h3>
-          <p>votre programme est disponible en entier, et les services tiers : suivi mensuel, messagerie, nutrion, adaption du programme reste actif jusqu'à la fin des 12mois.</p>
-        </div>
+        <!-- Option 1 : Ajoute id="card-1fois" -->
+<div id="card-1fois" class="offer-card orange">
+  <h3>Payé 149€ en une seule fois</h3>
+  <p>...</p>
+</div>
 
-        <!-- Option 2 -->
-        <div class="offer-card white">
-          <h3>Payé 12,42 par semaine</h3>
-          <p>votre programme est disponible sequentiellement à chaque versement, et les services tiers : suivi mensuel, messagerie, nutrion, adaption du programme reste actif jusqu'à la fin des 12mois, ou resiliation de l'abonnement.</p>
-        </div>
-      </div>
+<!-- Option 2 : Ajoute id="card-12fois" et change la classe en 'white' pour la rendre blanche au chargement -->
+<div id="card-12fois" class="offer-card white">
+  <h3>Payé 12,42 par semaine</h3>
+  <p>...</p>
+</div>
 
       <!-- Boutons bas de page -->
       <div class="bottom-actions">
