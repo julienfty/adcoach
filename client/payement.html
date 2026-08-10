@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Paiement - ADcoach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #f8fafc;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Conteneur principal global */
+    .payment-container {
+      background: #ffffff;
+      width: 1000px;
+      max-width: 95%;
+      height: 620px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      display: flex;
+      padding: 35px;
+      gap: 50px;
+      position: relative;
+    }
+
+    /* Sidebar de gauche */
+    .sidebar-card {
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      width: 300px;
+      border-radius: 20px;
+      padding: 35px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-card h2 {
+      color: #E95300;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .sidebar-card p {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* Partie droite */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .welcome-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #1e293b;
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .welcome-title span {
+      color: #E95300;
+    }
+
+    /* Cartes de paiement */
+    .offers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .offer-card {
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    /* Carte 1 : Orange (Sélectionnée par défaut) */
+    .offer-card.orange {
+      background-color: #E95300;
+      color: white;
+      box-shadow: 0 8px 20px rgba(233, 83, 0, 0.3);
+    }
+
+    .offer-card.orange h3 {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .offer-card.orange p {
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: 0.95;
+    }
+
+    /* Carte 2 : Blanche avec contour */
+    .offer-card.white {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      color: #1e293b;
+    }
+
+    .offer-card.white h3 {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+
+    .offer-card.white p {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #64748b;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Bas de page : Boutons action */
+    .bottom-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .btn-delete {
+      background: #ffffff;
+      color: #64748b;
+      border: 1px solid #cbd5e1;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+      transition: all 0.2s ease;
+    }
+
+    .btn-delete:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    .btn-suivant {
+      background: #E95300;
+      color: white;
+      border: none;
+      padding: 12px 35px;
+      border-radius: 30px;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(233, 83, 0, 0.35);
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-suivant:hover {
+      background-color: #C34600;
+      transform: translateY(-1px);
+    }
+
+    /* --- MODAL DE SUPPRESSION DE COMPTE --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-box {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      width: 420px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .modal-box h3 {
+      color: #1e293b;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .modal-box p {
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .btn-modal-no {
+      background: #f1f5f9;
+      color: #1e293b;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-modal-no:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-modal-yes {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-modal-yes:hover {
+      background: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="payment-container">
+    <!-- Sidebar gauche -->
+    <div class="sidebar-card">
+      <h2>Payement</h2>
+      <p>passer au payement pour bénéficier de l'offre ou bien supprimé votre compte.*</p>
+    </div>
+
+    <!-- Contenu droit -->
+    <div class="main-content">
+      <h1 class="welcome-title">Bonjour, <span id="user-prenom">Chargement...</span></h1>
+      
+      <div class="offers-list">
+        <!-- Option 1 -->
+        <div class="offer-card orange">
+          <h3>Payé 149€ en une seule fois</h3>
+          <p>votre programme est disponible en entier, et les services tiers : suivi mensuel, messagerie, nutrion, adaption du programme reste actif jusqu'à la fin des 12mois.</p>
+        </div>
+
+        <!-- Option 2 -->
+        <div class="offer-card white">
+          <h3>Payé 12,42 par semaine</h3>
+          <p>votre programme est disponible sequentiellement à chaque versement, et les services tiers : suivi mensuel, messagerie, nutrion, adaption du programme reste actif jusqu'à la fin des 12mois, ou resiliation de l'abonnement.</p>
+        </div>
+      </div>
+
+      <!-- Boutons bas de page -->
+      <div class="bottom-actions">
+        <button id="open-delete-modal" class="btn-delete">supprimer mon compte</button>
+        <button id="btn-suivant" class="btn-suivant">suivant</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP DE SÉCURITÉ (SUPPRESSION DE COMPTE) -->
+  <div id="delete-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3>Êtes-vous sûr ?</h3>
+      <p>Cette action est irréversible. Voulez-vous continuer ?</p>
+      <div class="modal-buttons">
+        <button id="btn-cancel-delete" class="btn-modal-no">Non</button>
+        <button id="btn-confirm-delete" class="btn-modal-yes">Oui</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Supabase & Logique de suppression -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+    const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
+    const supabaseAnonKey = 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8'
+    const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+    // Vérification de sécurité et affichage du prénom
+    async function checkAuthAndLoadUser() {
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session) {
+        window.location.href = '../index.html'
+        return
+      }
+
+      const user = session.user
+      const prenom = user.user_metadata?.prenom || "Champion"
+      document.getElementById('user-prenom').innerText = prenom
+    }
+
+    checkAuthAndLoadUser()
+
+    // Gestion de la popup de suppression
+    const deleteModal = document.getElementById('delete-modal')
+    const openDeleteModalBtn = document.getElementById('open-delete-modal')
+    const cancelDeleteBtn = document.getElementById('btn-cancel-delete')
+    const confirmDeleteBtn = document.getElementById('btn-confirm-delete')
+
+    // Ouvrir la popup
+    openDeleteModalBtn.addEventListener('click', () => {
+      deleteModal.style.display = 'flex'
+    })
+
+    // Fermer la popup (Non)
+    cancelDeleteBtn.addEventListener('click', () => {
+      deleteModal.style.display = 'none'
+    })
+
+    // Confirmer la suppression (Oui)
+    confirmDeleteBtn.addEventListener('click', async () => {
+      // Appel de la fonction SQL RPC pour supprimer le compte de la base Supabase
+      const { error } = await supabase.rpc('delete_user')
+
+      if (error) {
+        alert("Erreur lors de la suppression du compte : " + error.message)
+        console.error(error)
+        deleteModal.style.display = 'none'
+      } else {
+        await supabase.auth.signOut()
+        alert("Votre compte a bien été supprimé.")
+        window.location.href = '../index.html'
+      }
+    })
+
+    // Bouton suivant (statique pour l'instant)
+    document.getElementById('btn-suivant').addEventListener('click', () => {
+      alert("Redirection vers le module de paiement...")
+    })
+  </script>
+
+</body>
+</html>
