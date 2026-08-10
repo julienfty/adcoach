@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Messagerie - ADcoach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #f8fafc; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Inter', sans-serif; }
+    
+    .container {
+      background: #ffffff;
+      width: 1000px;
+      max-width: 95%;
+      height: 620px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      display: flex;
+      padding: 35px;
+      gap: 40px;
+    }
+
+    /* Sidebar identique */
+    .sidebar-card {
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      width: 280px;
+      border-radius: 20px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .user-header { color: #E95300; font-size: 22px; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; }
+
+    .nav-links { display: flex; flex-direction: column; gap: 8px; }
+    .nav-link { 
+      padding: 10px 16px; border-radius: 12px; color: #64748b; font-weight: 600; 
+      text-decoration: none; transition: all 0.2s; font-size: 14px;
+    }
+    .nav-link:hover { background: #f8fafc; color: #E95300; }
+    .nav-link.active { background: #E95300; color: #ffffff; box-shadow: 0 4px 12px rgba(233, 83, 0, 0.3); }
+
+    .btn-logout { 
+      background: #f1f5f9; color: #64748b; border: none; padding: 12px; 
+      border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; 
+    }
+    .btn-logout:hover { background: #fee2e2; color: #dc2626; }
+    
+    /* Conteneur de droite - Chat Box */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chat-header {
+      font-size: 26px;
+      font-weight: bold;
+      color: #1e293b;
+      text-align: right;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .chat-header span { color: #E95300; }
+
+    /* Zone des messages défilante */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .message.client {
+      background: #E95300;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.admin {
+      background: #f1f5f9;
+      color: #1e293b;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Barre de saisie en bas */
+    .chat-input-form {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 8px 12px;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .chat-input-form input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #1e293b;
+      padding: 8px;
+    }
+
+    .chat-input-form button {
+      background: #E95300;
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .chat-input-form button:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+
+    .chat-input-form button svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar-card">
+      <div>
+        <h2 class="user-header" id="user-fullname">...</h2>
+        <nav class="nav-links">
+          <a href="client.html" class="nav-link">accueil</a>
+          <a href="progression.html" class="nav-link">progression</a>
+          <a href="programme.html" class="nav-link">programme</a>
+          <a href="nutrition.html" class="nav-link">nutrition</a>
+          <a href="messagerie.html" class="nav-link active">messagerie</a>
+          <a href="contrat.html" class="nav-link">contrat</a>
+          <a href="parametre.html" class="nav-link">paramètre</a>
+        </nav>
+      </div>
+      <button id="btn-logout" class="btn-logout">Se déconnecter</button>
+    </div>
+
+    <!-- Contenu Droite : Messagerie -->
+    <div class="main-content">
+      <h1 class="chat-header">Discussion avec <span>Antoine</span></h1>
+      
+      <div id="chat-messages" class="chat-messages">
+        <!-- Les messages chargés dynamiquement apparaîtront ici -->
+      </div>
+
+      <form id="chat-form" class="chat-input-form">
+        <input type="text" id="message-input" placeholder="écrivez votre message" autocomplete="off" required>
+        <button type="submit">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+    const supabase = createClient('https://gyojzwmknilkglcywvck.supabase.co', 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8')
+
+    let userId = null
+
+    async function initChat() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        window.location.href = '../index.html'
+        return
+      }
+
+      userId = session.user.id
+      const p = session.user.user_metadata?.prenom || "Champion"
+      const n = session.user.user_metadata?.nom || "NOM"
+      document.getElementById('user-fullname').innerText = `${p} ${n.toUpperCase()}`
+
+      loadMessages()
+
+      // Écouter les messages en temps réel
+      supabase
+        .channel('public:messages')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `user_id=eq.${userId}` }, payload => {
+          appendMessage(payload.new)
+        })
+        .subscribe()
+    }
+
+    async function loadMessages() {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true })
+
+      if (error) {
+        console.error("Erreur:", error)
+        return
+      }
+
+      const container = document.getElementById('chat-messages')
+      container.innerHTML = ''
+      if (data) {
+        data.forEach(msg => appendMessage(msg))
+      }
+      container.scrollTop = container.scrollHeight
+    }
+
+    function appendMessage(msg) {
+      const container = document.getElementById('chat-messages')
+      const div = document.createElement('div')
+      div.className = `message ${msg.sender}`
+      div.textContent = msg.content
+      container.appendChild(div)
+      container.scrollTop = container.scrollHeight
+    }
+
+    document.getElementById('chat-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const input = document.getElementById('message-input')
+      const content = input.value.trim()
+      if (!content || !userId) return
+
+      const { error } = await supabase.from('messages').insert([
+        { user_id: userId, sender: 'client', content: content }
+      ])
+
+      if (!error) {
+        input.value = ''
+      }
+    })
+
+    initChat()
+
+    document.getElementById('btn-logout').onclick = () => { 
+      supabase.auth.signOut(); 
+      window.location.href = '../index.html'; 
+    }
+  </script>
+</body>
+</html>
