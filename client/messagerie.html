@@ -87,6 +87,9 @@
       border-radius: 16px;
       font-size: 14px;
       line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .message.client {
@@ -102,6 +105,21 @@
       align-self: flex-start;
       border-bottom-left-radius: 4px;
       border: 1px solid #e2e8f0;
+    }
+
+    /* Style de l'heure sous le message */
+    .message-time {
+      font-size: 10px;
+      align-self: flex-end;
+      font-weight: 500;
+    }
+
+    .message.client .message-time {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .message.admin .message-time {
+      color: #64748b;
     }
 
     /* Barre de saisie en bas */
@@ -195,6 +213,7 @@
     const supabase = createClient('https://gyojzwmknilkglcywvck.supabase.co', 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8')
 
     let userId = null
+    const renderedIds = new Set()
 
     async function initChat() {
       const { data: { session } } = await supabase.auth.getSession()
@@ -233,17 +252,34 @@
 
       const container = document.getElementById('chat-messages')
       container.innerHTML = ''
+      renderedIds.clear()
+
       if (data) {
         data.forEach(msg => appendMessage(msg))
       }
-      container.scrollTop = container.scrollHeight
     }
 
     function appendMessage(msg) {
+      if (msg.id && renderedIds.has(msg.id)) return
+      if (msg.id) renderedIds.add(msg.id)
+
       const container = document.getElementById('chat-messages')
       const div = document.createElement('div')
       div.className = `message ${msg.sender}`
-      div.textContent = msg.content
+
+      const date = msg.created_at ? new Date(msg.created_at) : new Date()
+      const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+      const textSpan = document.createElement('span')
+      textSpan.textContent = msg.content
+
+      const timeSpan = document.createElement('span')
+      timeSpan.className = 'message-time'
+      timeSpan.textContent = timeString
+
+      div.appendChild(textSpan)
+      div.appendChild(timeSpan)
+
       container.appendChild(div)
       container.scrollTop = container.scrollHeight
     }
@@ -254,12 +290,14 @@
       const content = input.value.trim()
       if (!content || !userId) return
 
-      const { error } = await supabase.from('messages').insert([
-        { user_id: userId, sender: 'client', content: content }
-      ])
+      input.value = ''
 
-      if (!error) {
-        input.value = ''
+      const { data, error } = await supabase.from('messages').insert([
+        { user_id: userId, sender: 'client', content: content }
+      ]).select()
+
+      if (!error && data && data.length > 0) {
+        appendMessage(data[0])
       }
     })
 
