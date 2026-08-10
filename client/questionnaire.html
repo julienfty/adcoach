@@ -22,7 +22,6 @@
       font-family: 'Inter', sans-serif;
     }
 
-    /* Conteneur principal global */
     .questionnaire-container {
       background: #ffffff;
       width: 1000px;
@@ -36,7 +35,6 @@
       position: relative;
     }
 
-    /* Sidebar de gauche avec la carte blanche et son ombre douce */
     .sidebar-card {
       background: #ffffff;
       border: 1px solid #f1f5f9;
@@ -61,7 +59,6 @@
       line-height: 1.6;
     }
 
-    /* Partie droite contenant le texte de bienvenue et les questions */
     .main-content {
       flex: 1;
       display: flex;
@@ -81,7 +78,6 @@
       color: #E95300;
     }
 
-    /* Liste des questions */
     .questions-list {
       display: flex;
       flex-direction: column;
@@ -117,7 +113,6 @@
       box-shadow: 0 0 0 3px rgba(233, 83, 0, 0.1);
     }
 
-    /* Bouton suivant en bas à droite */
     .btn-suivant {
       align-self: flex-end;
       background: #E95300;
@@ -145,17 +140,14 @@
 <body>
 
   <div class="questionnaire-container">
-    <!-- Sidebar gauche -->
     <div class="sidebar-card">
       <h2>Questionnaire</h2>
       <p>ce questionnaire permet de mieux perfectionné la création ton programme personnalisé.</p>
       <p>à l'issue de ce questionnaire tes réponses seront envoyées pour créer ton programme.*</p>
     </div>
-
-    <!-- Contenu droit -->
+    
     <div class="main-content">
       <h1 class="welcome-title">Bonjour, <span id="user-prenom">Chargement...</span></h1>
-      
       <form id="questionnaire-form" class="questions-list">
         <div class="question-group">
           <label>question n1</label>
@@ -182,8 +174,7 @@
       </form>
     </div>
   </div>
-
-  <!-- Script de sécurité et de récupération dynamique du prénom Supabase -->
+  
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -194,13 +185,11 @@
     async function checkAuthAndLoadUser() {
       const { data: { session } } = await supabase.auth.getSession()
 
-      // Si l'utilisateur n'est pas connecté, on le renvoie à l'accueil
       if (!session) {
         window.location.href = '../index.html'
         return
       }
-
-      // Récupération dynamique du prénom depuis les métadonnées Supabase
+      
       const user = session.user
       const prenom = user.user_metadata?.prenom || "Champion"
       
@@ -209,7 +198,6 @@
 
     checkAuthAndLoadUser()
 
-    // Gestion de la soumission et mise à jour de la base de données
     const form = document.getElementById('questionnaire-form')
     form.addEventListener('submit', async (e) => {
       e.preventDefault()
@@ -217,7 +205,6 @@
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
 
-      // Mise à jour de la table 'profiles' pour passer 'questionnaire' à true
       const { error } = await supabase
         .from('profiles')
         .update({ questionnaire: true })
@@ -227,7 +214,6 @@
         console.error("Erreur lors de la mise à jour :", error)
         alert("Une erreur est survenue.")
       } else {
-        // Redirection vers la page de paiement après succès
         window.location.href = 'payement.html'
       }
     })
