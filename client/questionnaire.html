@@ -258,8 +258,16 @@
             <input type="text" id="alcool" required />
           </div>
           <div class="question-group">
+            <label>Régulièrement ? (optionnel)</label>
+            <input type="text" id="type_alcool" />
+          </div>
+          <div class="question-group">
             <label>Consommes-tu du tabac ? (oui/non)</label>
             <input type="text" id="tabac" required />
+          </div>
+          <div class="question-group">
+            <label>Régulièrement ? (optionnel)</label>
+            <input type="text" id="type_tabac" />
           </div>
           <button type="button" class="btn-suivant" onclick="nextStep(4)">Suivant</button>
         </div>
@@ -393,7 +401,9 @@
         sommeil: getVal('sommeil'),
         stress: getVal('stress'),
         alcool: getBool('alcool'),
+        type_alcool: getBool('type_alcool'),
         tabac: getBool('tabac'),
+        type_tabac: getBool('type_tabac'),
         nrepas: getVal('nrepas'),
         dejeuner: getBool('dejeuner'),
         fastfood: getBool('fastfood'),
