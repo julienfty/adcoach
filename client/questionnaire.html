@@ -112,7 +112,8 @@
       font-size: 14px;
     }
 
-    .question-group input {
+    .question-group input, 
+    .question-group select {
       padding: 10px 16px;
       border-radius: 12px;
       border: 1px solid #e2e8f0;
@@ -121,9 +122,11 @@
       font-size: 14px;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
       transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
     }
 
-    .question-group input:focus {
+    .question-group input:focus, 
+    .question-group select:focus {
       border-color: #E95300;
       background-color: #fff;
       box-shadow: 0 0 0 3px rgba(233, 83, 0, 0.1);
@@ -216,24 +219,36 @@
         <div class="step-container" id="step-3">
           <div class="step-title">3) Santé</div>
           <div class="question-group">
-            <label>As-tu des blessures ou des douleurs actuelles ? (oui/non)</label>
-            <input type="text" id="blessure" required />
+            <label>As-tu des blessures ou des douleurs actuelles ?</label>
+            <select id="blessure" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
             <label>Quel type de blessure as-tu ? (optionnel)</label>
             <input type="text" id="type_blessure" />
           </div>
           <div class="question-group">
-            <label>As-tu des problèmes de santé ? (oui/non)</label>
-            <input type="text" id="santé" required />
+            <label>As-tu des problèmes de santé ?</label>
+            <select id="santé" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
             <label>Quel type de problème de santé as-tu ? (optionnel)</label>
             <input type="text" id="type_santé" />
           </div>
           <div class="question-group">
-            <label>Prends-tu des médicaments ? (oui/non)</label>
-            <input type="text" id="medicament" required />
+            <label>Prends-tu des médicaments ?</label>
+            <select id="medicament" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
             <label>Quels sont ces médicaments ? (optionnel)</label>
@@ -254,16 +269,24 @@
             <input type="text" id="stress" required />
           </div>
           <div class="question-group">
-            <label>Consommes-tu de l'alcool ? (oui/non)</label>
-            <input type="text" id="alcool" required />
+            <label>Consommes-tu de l'alcool ?</label>
+            <select id="alcool" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
             <label>Régulièrement ? (optionnel)</label>
             <input type="text" id="type_alcool" />
           </div>
           <div class="question-group">
-            <label>Consommes-tu du tabac ? (oui/non)</label>
-            <input type="text" id="tabac" required />
+            <label>Consommes-tu du tabac ?</label>
+            <select id="tabac" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
             <label>Régulièrement ? (optionnel)</label>
@@ -280,16 +303,28 @@
             <input type="text" id="nrepas" required />
           </div>
           <div class="question-group">
-            <label>Prends-tu un petit déjeuner ? (oui/non)</label>
-            <input type="text" id="dejeuner" required />
+            <label>Prends-tu un petit déjeuner ?</label>
+            <select id="dejeuner" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
-            <label>Manges-tu souvent à l'extérieur ou dans des fast-foods ? (oui/non)</label>
-            <input type="text" id="fastfood" required />
+            <label>Manges-tu souvent à l'extérieur ou dans des fast-foods ?</label>
+            <select id="fastfood" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
-            <label>Grignotes-tu entre les repas ? (oui/non)</label>
-            <input type="text" id="grignote" required />
+            <label>Grignotes-tu entre les repas ?</label>
+            <select id="grignote" required>
+              <option value="" disabled selected>Choisis une option</option>
+              <option value="oui">Oui</option>
+              <option value="non">Non</option>
+            </select>
           </div>
           <div class="question-group">
             <label>Combien bois-tu d'eau par jour ?</label>
@@ -338,18 +373,18 @@
 
     checkAuthAndLoadUser()
 
-    // Gestion du passage d'une étape à l'autre avec vérification des champs requis
+    // Gestion du passage d'une étape à l'autre avec vérification des champs requis (inputs et selects)
     window.nextStep = function(currentStepNumber) {
       const currentStepElement = document.getElementById(`step-${currentStepNumber}`);
-      const inputs = currentStepElement.querySelectorAll('input[required]');
+      const requiredFields = currentStepElement.querySelectorAll('input[required], select[required]');
       
       let isValid = true;
-      inputs.forEach(input => {
-        if (!input.value.trim()) {
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
           isValid = false;
-          input.style.borderColor = '#dc2626';
+          field.style.borderColor = '#dc2626';
         } else {
-          input.style.borderColor = '#e2e8f0';
+          field.style.borderColor = '#e2e8f0';
         }
       });
 
@@ -374,11 +409,11 @@
 
       const userId = session.user.id
 
-      // Fonction utilitaire pour convertir les "oui"/"non" en booléens si nécessaire, ou laisser en texte
+      // Fonctions utilitaires
       const getVal = (id) => document.getElementById(id).value.trim()
       const getBool = (id) => {
         const val = document.getElementById(id).value.trim().toLowerCase()
-        return val === 'oui' || val === 'yes' || val === 'true' || val === '1'
+        return val === 'oui'
       }
 
       // 1. Enregistrement des détails dans la table "profils_details"
@@ -401,9 +436,9 @@
         sommeil: getVal('sommeil'),
         stress: getVal('stress'),
         alcool: getBool('alcool'),
-        type_alcool: getBool('type_alcool'),
+        type_alcool: getVal('type_alcool'),
         tabac: getBool('tabac'),
-        type_tabac: getBool('type_tabac'),
+        type_tabac: getVal('type_tabac'),
         nrepas: getVal('nrepas'),
         dejeuner: getBool('dejeuner'),
         fastfood: getBool('fastfood'),
