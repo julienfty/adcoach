@@ -311,7 +311,7 @@
 
   <!-- Script Supabase & Logique de suppression -->
   <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
     const supabaseUrl = 'https://gyojzwmknilkglcywvck.supabase.co'
     const supabaseAnonKey = 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8'
@@ -333,25 +333,68 @@
 
     checkAuthAndLoadUser()
 
-    // Gestion de la popup de suppression
+    // Gestion de la sélection interactive des cartes de paiement
+    const card1Fois = document.getElementById('card-1fois')
+    const card12Fois = document.getElementById('card-12fois')
+    let selectedType = '1_fois' // Par défaut sur la première carte
+
+    card1Fois.addEventListener('click', () => {
+      card1Fois.classList.add('selected')
+      card12Fois.classList.remove('selected')
+      selectedType = '1_fois'
+    })
+
+    card12Fois.addEventListener('click', () => {
+      card12Fois.classList.add('selected')
+      card1Fois.classList.remove('selected')
+      selectedType = '12_fois'
+    })
+
+    // Gestion du bouton "suivant" (Enregistrement dans Supabase)
+    const btnSuivant = document.getElementById('btn-suivant')
+    btnSuivant.addEventListener('click', async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) return
+
+      // Définition des valeurs selon le choix
+      const isAbonnement = selectedType === '12_fois'
+      
+      const updateData = {
+        payement: true,
+        type_paiement: selectedType,
+        statut_abonnement: isAbonnement ? 'actif' : 'non_applicable'
+      }
+
+      // Mise à jour de la table profiles
+      const { error } = await supabase
+        .from('profiles')
+        .update(updateData)
+        .eq('id', session.user.id)
+
+      if (error) {
+        console.error("Erreur lors de la mise à jour du paiement :", error)
+        alert("Une erreur est survenue lors de l'enregistrement.")
+      } else {
+        // Redirection vers l'espace client final
+        window.location.href = 'client.html'
+      }
+    })
+
+    // Gestion de la popup de suppression de compte
     const deleteModal = document.getElementById('delete-modal')
     const openDeleteModalBtn = document.getElementById('open-delete-modal')
     const cancelDeleteBtn = document.getElementById('btn-cancel-delete')
     const confirmDeleteBtn = document.getElementById('btn-confirm-delete')
 
-    // Ouvrir la popup
     openDeleteModalBtn.addEventListener('click', () => {
       deleteModal.style.display = 'flex'
     })
 
-    // Fermer la popup (Non)
     cancelDeleteBtn.addEventListener('click', () => {
       deleteModal.style.display = 'none'
     })
 
-    // Confirmer la suppression (Oui)
     confirmDeleteBtn.addEventListener('click', async () => {
-      // Appel de la fonction SQL RPC pour supprimer le compte de la base Supabase
       const { error } = await supabase.rpc('delete_user')
 
       if (error) {
@@ -363,11 +406,6 @@
         alert("Votre compte a bien été supprimé.")
         window.location.href = '../index.html'
       }
-    })
-
-    // Bouton suivant (statique pour l'instant)
-    document.getElementById('btn-suivant').addEventListener('click', () => {
-      alert("Redirection vers le module de paiement...")
     })
   </script>
 
