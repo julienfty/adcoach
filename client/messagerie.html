@@ -328,8 +328,8 @@
     const supabase = createClient('https://gyojzwmknilkglcywvck.supabase.co', 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8')
 
     let currentUser = null
-    let isAdmin = false
-    let activeTargetUserId = null // L'ID du client avec qui l'admin discute actuellement
+    let isUserAdmin = false
+    let activeTargetUserId = null 
     const renderedIds = new Set()
 
     async function init() {
@@ -345,24 +345,20 @@
       const n = meta.nom || "NOM"
       document.getElementById('user-fullname').innerText = `${p} ${n.toUpperCase()}`
 
-      // Vérifier si l'utilisateur courant est l'hôte (admin)
-      // Ajuste selon ta structure : ici on vérifie si role === 'admin' dans la table profiles
+      // On vérifie le champ booléen "admin" dans la table profiles
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('role')
+        .select('admin')
         .eq('id', currentUser.id)
         .single()
 
-      if (profileData && profileData.role === 'admin') {
-        isAdmin = true
-        document.getElementById('user-fullname').innerText = "hôté" // ou un autre titre pour l'hôte dans la sidebar
+      if (profileData && profileData.admin === true) {
+        isUserAdmin = true
+        document.getElementById('user-fullname').innerText = "hôté" 
         document.getElementById('btn-open-profiles').style.display = 'block'
         
-        // Charger la liste des membres éligibles (questionnaire et paiement validés)
         loadMembersList()
       } else {
-        // C'est un client classique, sa cible de discussion est unique (ex: l'ID de l'admin ou géré par la table)
-        // Pour un client classique, ses messages ont user_id = son propre id
         activeTargetUserId = currentUser.id
         document.getElementById('chat-title').innerHTML = 'Discussion avec <span>Antoine</span>'
         loadMessages(activeTargetUserId)
@@ -376,7 +372,7 @@
         .from('profiles')
         .select('id, prenom, nom')
         .eq('questionnaire', true)
-        .eq('payement', true) // Assurez-vous que la colonne de paiement s'appelle bien 'payement' ou 'payment'
+        .eq('payement', true)
 
       if (error) {
         console.error("Erreur chargement profils:", error)
@@ -387,7 +383,6 @@
       listContainer.innerHTML = ''
 
       if (profiles && profiles.length > 0) {
-        // Sélectionner automatiquement le premier membre par défaut
         activeTargetUserId = profiles[0].id
         updateChatHeader(profiles[0])
         loadMessages(activeTargetUserId)
@@ -409,7 +404,6 @@
           `
 
           item.onclick = () => {
-            // Changer de discussion active
             document.querySelectorAll('.profile-item').forEach(el => el.classList.remove('active-chat'))
             item.classList.add('active-chat')
             
@@ -417,7 +411,6 @@
             updateChatHeader(prof)
             loadMessages(activeTargetUserId)
             
-            // Fermer la modale après sélection
             document.getElementById('profiles-modal').classList.remove('active')
           }
 
@@ -475,7 +468,6 @@
       const container = document.getElementById('chat-messages')
       const div = document.createElement('div')
       
-      // Si l'utilisateur actuel est admin, les messages envoyés par l'admin ont le sender 'admin', et l'inverse pour le client
       div.className = `message ${msg.sender}`
 
       const date = msg.created_at ? new Date(msg.created_at) : new Date()
@@ -504,8 +496,7 @@
 
       input.value = ''
 
-      // Le sender dépend de qui envoie : si c'est l'admin, sender = 'admin', sinon 'client'
-      const senderType = isAdmin ? 'admin' : 'client'
+      const senderType = isUserAdmin ? 'admin' : 'client'
 
       const { data, error } = await supabase.from('messages').insert([
         { user_id: activeTargetUserId, sender: senderType, content: content }
