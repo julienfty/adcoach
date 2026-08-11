@@ -187,14 +187,14 @@
     .chat-input-form button:hover { opacity: 0.9; transform: scale(1.05); }
     .chat-input-form button svg { width: 16px; height: 16px; fill: currentColor; transform: rotate(45deg); margin-right: 2px; }
 
-    /* DEUXIÈME SIDEBAR EN VERRE TRANSPARENT FLOU (Même taille que .sidebar-card) */
+    /* DEUXIÈME SIDEBAR EN VERRE TRANSPARENT FLOU */
     .profiles-sidebar {
       position: absolute;
       top: 35px;
       left: 350px;
       width: 300px;
       height: calc(100% - 70px);
-      background: rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.50);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 20px;
@@ -286,6 +286,10 @@
       height: 8px;
       background-color: #E95300;
       border-radius: 50%;
+      display: none; /* Masqué par défaut, géré en JS */
+    }
+    .profile-dot.visible {
+      display: block;
     }
   </style>
 </head>
@@ -351,6 +355,7 @@
     let activeTargetUserId = null 
     let currentSubscription = null
     const renderedIds = new Set()
+    let globalProfilesData = []
 
     async function init() {
       const { data: { session } } = await supabase.auth.getSession()
@@ -378,9 +383,8 @@
         
         if (profileData.admin === true) {
           isUserAdmin = true
-          // Afficher la flèche sur l'onglet messagerie pour l'admin
           document.getElementById('menu-arrow').style.display = 'inline-block'
-          loadMembersList()
+          await loadMembersList()
         } else {
           activeTargetUserId = currentUser.id
           document.getElementById('chat-title').innerHTML = 'Discussion avec <span>l\'hôte</span>'
@@ -403,16 +407,43 @@
         return
       }
 
+      if (profiles && profiles.length > 0) {
+        // Récupérer pour chaque profil son dernier message et sa date
+        globalProfilesData = await Promise.all(profiles.map(async (prof) => {
+          const { data: msgData } = await supabase
+            .from('messages')
+            .select('sender, created_at, content')
+            .eq('user_id', prof.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+
+          const lastMsg = msgData && msgData.length > 0 ? msgData[0] : null
+          return {
+            ...prof,
+            lastMessageTime: lastMsg ? new Date(lastMsg.created_at) : new Date(0),
+            lastMessageSender: lastMsg ? lastMsg.sender : null,
+            lastMessageString: lastMsg ? new Date(lastMsg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'
+          }
+        }))
+
+        // Trier du plus récent au plus ancien
+        globalProfilesData.sort((a, b) => b.lastMessageTime - a.lastMessageTime)
+
+        activeTargetUserId = globalProfilesData[0].id
+        updateChatHeader(globalProfilesData[0])
+        loadMessages(activeTargetUserId)
+        subscribeToMessages(activeTargetUserId)
+      }
+
+      renderProfilesList()
+    }
+
+    function renderProfilesList() {
       const listContainer = document.getElementById('profiles-list')
       listContainer.innerHTML = ''
 
-      if (profiles && profiles.length > 0) {
-        activeTargetUserId = profiles[0].id
-        updateChatHeader(profiles[0])
-        loadMessages(activeTargetUserId)
-        subscribeToMessages(activeTargetUserId)
-
-        profiles.forEach(prof => {
+      if (globalProfilesData && globalProfilesData.length > 0) {
+        globalProfilesData.forEach(prof => {
           const item = document.createElement('div')
           item.className = `profile-item ${prof.id === activeTargetUserId ? 'active-chat' : ''}`
           item.id = `profile-item-${prof.id}`
@@ -421,26 +452,34 @@
           const nomVal = prof.nom ? prof.nom.toUpperCase() : ''
           const prenomNom = `${prenomVal} ${nomVal}`.trim()
 
+          // Le point orange s'affiche si le dernier message vient du client
+          const hasUnread = prof.lastMessageSender === 'client'
+
           item.innerHTML = `
             <div class="profile-info">
               <span class="profile-name">${prenomNom}</span>
-              <span class="profile-time">actif</span>
+              <span class="profile-time">${prof.lastMessageString}</span>
             </div>
             <div class="profile-right">
-              <div class="profile-dot"></div>
+              <div class="profile-dot ${hasUnread ? 'visible' : ''}" id="dot-${prof.id}"></div>
             </div>
           `
 
-          item.onclick = () => {
+          item.onclick = async () => {
             document.querySelectorAll('.profile-item').forEach(el => el.classList.remove('active-chat'))
             item.classList.add('active-chat')
             
             activeTargetUserId = prof.id
             updateChatHeader(prof)
+            
+            // Masquer le point orange localement dès la lecture
+            const dot = document.getElementById(`dot-${prof.id}`)
+            if (dot) dot.classList.remove('visible')
+            prof.lastMessageSender = 'admin' // Considéré comme lu/répondu
+
             loadMessages(activeTargetUserId)
             subscribeToMessages(activeTargetUserId)
             
-            // Fermer la sidebar après sélection
             document.getElementById('profiles-sidebar').classList.remove('active')
           }
 
@@ -491,6 +530,21 @@
           filter: `user_id=eq.${targetId}` 
         }, payload => {
           appendMessage(payload.new)
+          
+          // Mettre à jour l'état du profil en temps réel si un nouveau message arrive
+          const prof = globalProfilesData.find(p => p.id === targetId)
+          if (prof) {
+            prof.lastMessageTime = new Date(payload.new.created_at)
+            prof.lastMessageString = prof.lastMessageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            prof.lastMessageSender = payload.new.sender
+            
+            // Si c'est l'admin qui regarde et que le message vient du client, afficher le point
+            if (isUserAdmin && payload.new.sender === 'client' && activeTargetUserId !== targetId) {
+              const dot = document.getElementById(`dot-${targetId}`)
+              if (dot) dot.classList.add('visible')
+            }
+            renderProfilesList()
+          }
         })
         .subscribe()
     }
@@ -548,6 +602,15 @@
         console.error("Erreur envoi message:", error)
       } else if (data && data.length > 0) {
         appendMessage(data[0])
+
+        // Mettre à jour l'heure et l'expéditeur du dernier message pour le profil actif
+        const prof = globalProfilesData.find(p => p.id === activeTargetUserId)
+        if (prof) {
+          prof.lastMessageTime = new Date(data[0].created_at)
+          prof.lastMessageString = prof.lastMessageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          prof.lastMessageSender = senderType
+          renderProfilesList()
+        }
       }
     })
 
