@@ -351,6 +351,7 @@
     let currentUser = null
     let isUserAdmin = false
     let activeTargetUserId = null 
+    let currentSubscription = null
     const renderedIds = new Set()
 
     async function init() {
@@ -367,11 +368,15 @@
       document.getElementById('user-fullname').innerText = `${p} ${n.toUpperCase()}`
 
       // Vérification du statut admin
-      const { data: profileData } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('admin')
         .eq('id', currentUser.id)
         .single()
+
+      if (profileError) {
+        console.error("Erreur récupération profil:", profileError)
+      }
 
       if (profileData && profileData.admin === true) {
         isUserAdmin = true
@@ -395,7 +400,7 @@
         .select('id, prenom, nom, created_at')
         .eq('questionnaire', true)
         .eq('payement', true)
-        .neq('id', currentUser.id) // Empêche l'admin de s'afficher lui-même
+        .neq('id', currentUser.id)
 
       if (error) {
         console.error("Erreur chargement profils:", error)
@@ -445,7 +450,6 @@
           listContainer.appendChild(item)
         })
       } else {
-        // Message si aucun profil dispo
         listContainer.innerHTML = '<div style="padding: 30px; color: #64748b; text-align: center; font-size: 14px; font-weight: 600;">aucun profil disponible</div>'
       }
     }
@@ -478,7 +482,11 @@
     }
 
     function subscribeToMessages(targetId) {
-      supabase.channel(`public:messages:${targetId}`)
+      if (currentSubscription) {
+        supabase.removeChannel(currentSubscription)
+      }
+
+      currentSubscription = supabase.channel(`public:messages:${targetId}`)
         .on('postgres_changes', { 
           event: 'INSERT', 
           schema: 'public', 
@@ -497,7 +505,6 @@
       const container = document.getElementById('chat-messages')
       const div = document.createElement('div')
       
-      // Utilisation de la colonne correcte "sender"
       div.className = `message ${msg.sender}`
 
       const date = msg.created_at ? new Date(msg.created_at) : new Date()
@@ -526,7 +533,6 @@
 
       input.value = ''
 
-      // 'admin' si c'est l'hôte, 'client' si c'est le membre
       const senderType = isUserAdmin ? 'admin' : 'client'
 
       const { data, error } = await supabase.from('messages').insert([
