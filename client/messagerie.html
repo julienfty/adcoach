@@ -20,9 +20,11 @@
       display: flex;
       padding: 35px;
       gap: 50px;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Sidebar rigoureusement identique aux autres pages */
+    /* Sidebar */
     .sidebar-card {
       background: #ffffff;
       border: 1px solid #f1f5f9;
@@ -33,6 +35,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      flex-shrink: 0;
     }
 
     .user-header { color: #E95300; font-size: 26px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; }
@@ -57,19 +60,40 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      position: relative;
     }
 
-    .chat-header {
-      font-size: 32px;
-      font-weight: bold;
-      color: #1e293b;
-      text-align: right;
+    .chat-header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
       padding-bottom: 15px;
       border-bottom: 1px solid #f1f5f9;
     }
 
+    .chat-header {
+      font-size: 28px;
+      font-weight: bold;
+      color: #1e293b;
+    }
+
     .chat-header span { color: #E95300; }
+
+    /* Bouton pour ouvrir la popup des profils (Admin uniquement) */
+    .btn-profiles-toggle {
+      background: #f1f5f9;
+      color: #E95300;
+      border: 1px solid #e2e8f0;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: none;
+      transition: 0.2s;
+    }
+    .btn-profiles-toggle:hover { background: #E95300; color: white; border-color: #E95300; }
 
     /* Zone des messages défilante */
     .chat-messages {
@@ -107,20 +131,13 @@
       border: 1px solid #e2e8f0;
     }
 
-    /* Style de l'heure sous le message */
     .message-time {
       font-size: 10px;
       align-self: flex-end;
       font-weight: 500;
     }
-
-    .message.client .message-time {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .message.admin .message-time {
-      color: #64748b;
-    }
+    .message.client .message-time { color: rgba(255, 255, 255, 0.8); }
+    .message.admin .message-time { color: #64748b; }
 
     /* Barre de saisie en bas */
     .chat-input-form {
@@ -158,16 +175,98 @@
       cursor: pointer;
       transition: 0.2s;
     }
+    .chat-input-form button:hover { opacity: 0.9; transform: scale(1.05); }
+    .chat-input-form button svg { width: 18px; height: 18px; fill: currentColor; }
 
-    .chat-input-form button:hover {
-      opacity: 0.9;
-      transform: scale(1.05);
+    /* POPUP PROFIL (STYLE MODALE) */
+    .profiles-modal {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .profiles-modal.active { display: flex; }
+
+    .profiles-card {
+      background: #ffffff;
+      width: 420px;
+      max-height: 85%;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      padding: 25px;
+      border: 1px solid #f1f5f9;
+      animation: scaleUp 0.2s ease;
     }
 
-    .chat-input-form button svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
+    @keyframes scaleUp {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .profiles-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    .profiles-card-header h2 {
+      color: #E95300;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #1e293b;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    .btn-close-modal:hover { color: #E95300; }
+
+    .profiles-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .profile-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .profile-item:hover { background: #fff4f0; border-color: #fdbv5c; }
+    .profile-item.active-chat { background: #fff4f0; border-color: #E95300; }
+
+    .profile-info { display: flex; flex-direction: column; gap: 2px; }
+    .profile-name { font-weight: 700; color: #1e293b; font-size: 14px; text-transform: capitalize; }
+    .profile-time { font-size: 11px; color: #64748b; }
+
+    .profile-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #E95300;
+      border-radius: 50%;
     }
   </style>
 </head>
@@ -193,7 +292,10 @@
 
     <!-- Contenu Droite : Messagerie -->
     <div class="main-content">
-      <h1 class="chat-header">Discussion avec <span>Antoine</span></h1>
+      <div class="chat-header-container">
+        <h1 class="chat-header" id="chat-title">Discussion avec <span>Antoine</span></h1>
+        <button id="btn-open-profiles" class="btn-profiles-toggle">profils</button>
+      </div>
       
       <div id="chat-messages" class="chat-messages">
         <!-- Les messages chargés dynamiquement apparaîtront ici -->
@@ -208,45 +310,139 @@
     </div>
   </div>
 
+  <!-- MODALE POPUP PROFIL (Visible uniquement pour l'hôte) -->
+  <div id="profiles-modal" class="profiles-modal">
+    <div class="profiles-card">
+      <div class="profiles-card-header">
+        <h2>profils</h2>
+        <button id="btn-close-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div id="profiles-list" class="profiles-list">
+        <!-- Liste des membres connectés injectée dynamiquement -->
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
     const supabase = createClient('https://gyojzwmknilkglcywvck.supabase.co', 'sb_publishable_UoIyjRbVbUoURw4psuk68w_4t_Z4iS8')
 
-    let userId = null
+    let currentUser = null
+    let isAdmin = false
+    let activeTargetUserId = null // L'ID du client avec qui l'admin discute actuellement
     const renderedIds = new Set()
 
-    async function initChat() {
+    async function init() {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
         window.location.href = '../index.html'
         return
       }
 
-      userId = session.user.id
-      const p = session.user.user_metadata?.prenom || "Champion"
-      const n = session.user.user_metadata?.nom || "NOM"
+      currentUser = session.user
+      const meta = currentUser.user_metadata || {}
+      const p = meta.prenom || "Champion"
+      const n = meta.nom || "NOM"
       document.getElementById('user-fullname').innerText = `${p} ${n.toUpperCase()}`
 
-      loadMessages()
+      // Vérifier si l'utilisateur courant est l'hôte (admin)
+      // Ajuste selon ta structure : ici on vérifie si role === 'admin' dans la table profiles
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', currentUser.id)
+        .single()
 
-      // Écouter les messages en temps réel
-      supabase
-        .channel('public:messages')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `user_id=eq.${userId}` }, payload => {
-          appendMessage(payload.new)
-        })
-        .subscribe()
+      if (profileData && profileData.role === 'admin') {
+        isAdmin = true
+        document.getElementById('user-fullname').innerText = "hôté" // ou un autre titre pour l'hôte dans la sidebar
+        document.getElementById('btn-open-profiles').style.display = 'block'
+        
+        // Charger la liste des membres éligibles (questionnaire et paiement validés)
+        loadMembersList()
+      } else {
+        // C'est un client classique, sa cible de discussion est unique (ex: l'ID de l'admin ou géré par la table)
+        // Pour un client classique, ses messages ont user_id = son propre id
+        activeTargetUserId = currentUser.id
+        document.getElementById('chat-title').innerHTML = 'Discussion avec <span>Antoine</span>'
+        loadMessages(activeTargetUserId)
+        subscribeToMessages(activeTargetUserId)
+      }
     }
 
-    async function loadMessages() {
+    // --- LOGIQUE ADMIN ---
+    async function loadMembersList() {
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('id, prenom, nom')
+        .eq('questionnaire', true)
+        .eq('payement', true) // Assurez-vous que la colonne de paiement s'appelle bien 'payement' ou 'payment'
+
+      if (error) {
+        console.error("Erreur chargement profils:", error)
+        return
+      }
+
+      const listContainer = document.getElementById('profiles-list')
+      listContainer.innerHTML = ''
+
+      if (profiles && profiles.length > 0) {
+        // Sélectionner automatiquement le premier membre par défaut
+        activeTargetUserId = profiles[0].id
+        updateChatHeader(profiles[0])
+        loadMessages(activeTargetUserId)
+        subscribeToMessages(activeTargetUserId)
+
+        profiles.forEach(prof => {
+          const item = document.createElement('div')
+          item.className = `profile-item ${prof.id === activeTargetUserId ? 'active-chat' : ''}`
+          item.id = `profile-item-${prof.id}`
+
+          const prenomNom = `${prof.prenom || 'Membre'} ${prof.nom ? prof.nom.toUpperCase() : ''}`
+          
+          item.innerHTML = `
+            <div class="profile-info">
+              <span class="profile-name">${prenomNom}</span>
+              <span class="profile-time">actif</span>
+            </div>
+            <div class="profile-dot"></div>
+          `
+
+          item.onclick = () => {
+            // Changer de discussion active
+            document.querySelectorAll('.profile-item').forEach(el => el.classList.remove('active-chat'))
+            item.classList.add('active-chat')
+            
+            activeTargetUserId = prof.id
+            updateChatHeader(prof)
+            loadMessages(activeTargetUserId)
+            
+            // Fermer la modale après sélection
+            document.getElementById('profiles-modal').classList.remove('active')
+          }
+
+          listContainer.appendChild(item)
+        })
+      } else {
+        listContainer.innerHTML = '<div style="padding: 15px; color: #64748b; text-align: center; font-size: 13px;">Aucun membre actif pour le moment.</div>'
+      }
+    }
+
+    function updateChatHeader(prof) {
+      const prenom = prof.prenom || 'Client'
+      document.getElementById('chat-title').innerHTML = `Discussion avec <span>${prenom}</span>`
+    }
+
+    // --- GESTION DES MESSAGES ---
+    async function loadMessages(targetId) {
       const { data, error } = await supabase
         .from('messages')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', targetId)
         .order('created_at', { ascending: true })
 
       if (error) {
-        console.error("Erreur:", error)
+        console.error("Erreur messages:", error)
         return
       }
 
@@ -259,12 +455,27 @@
       }
     }
 
+    function subscribeToMessages(targetId) {
+      supabase.channel(`public:messages:${targetId}`)
+        .on('postgres_changes', { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'messages', 
+          filter: `user_id=eq.${targetId}` 
+        }, payload => {
+          appendMessage(payload.new)
+        })
+        .subscribe()
+    }
+
     function appendMessage(msg) {
       if (msg.id && renderedIds.has(msg.id)) return
       if (msg.id) renderedIds.add(msg.id)
 
       const container = document.getElementById('chat-messages')
       const div = document.createElement('div')
+      
+      // Si l'utilisateur actuel est admin, les messages envoyés par l'admin ont le sender 'admin', et l'inverse pour le client
       div.className = `message ${msg.sender}`
 
       const date = msg.created_at ? new Date(msg.created_at) : new Date()
@@ -284,16 +495,20 @@
       container.scrollTop = container.scrollHeight
     }
 
+    // --- ENVOI DE MESSAGE ---
     document.getElementById('chat-form').addEventListener('submit', async (e) => {
       e.preventDefault()
       const input = document.getElementById('message-input')
       const content = input.value.trim()
-      if (!content || !userId) return
+      if (!content || !activeTargetUserId) return
 
       input.value = ''
 
+      // Le sender dépend de qui envoie : si c'est l'admin, sender = 'admin', sinon 'client'
+      const senderType = isAdmin ? 'admin' : 'client'
+
       const { data, error } = await supabase.from('messages').insert([
-        { user_id: userId, sender: 'client', content: content }
+        { user_id: activeTargetUserId, sender: senderType, content: content }
       ]).select()
 
       if (!error && data && data.length > 0) {
@@ -301,12 +516,21 @@
       }
     })
 
-    initChat()
+    // --- ÉVÈNEMENTS INTERFACE (MODALE) ---
+    document.getElementById('btn-open-profiles').onclick = () => {
+      document.getElementById('profiles-modal').classList.add('active')
+    }
+
+    document.getElementById('btn-close-modal').onclick = () => {
+      document.getElementById('profiles-modal').classList.remove('active')
+    }
 
     document.getElementById('btn-logout').onclick = () => { 
-      supabase.auth.signOut(); 
-      window.location.href = '../index.html'; 
+      supabase.auth.signOut()
+      window.location.href = '../index.html' 
     }
+
+    init()
   </script>
 </body>
 </html>
