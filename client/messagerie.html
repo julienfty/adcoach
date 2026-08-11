@@ -397,7 +397,7 @@
     async function loadMembersList() {
       const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('id, prenom, nom, created_at')
+        .select('id, prenom, nom, questionnaire, payement')
         .eq('questionnaire', true)
         .eq('payement', true)
         .neq('id', currentUser.id)
@@ -421,13 +421,14 @@
           item.className = `profile-item ${prof.id === activeTargetUserId ? 'active-chat' : ''}`
           item.id = `profile-item-${prof.id}`
 
-          const prenomNom = `${prof.prenom || 'Membre'} ${prof.nom ? prof.nom.toUpperCase() : ''}`
-          const date = prof.created_at ? new Date(prof.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'récent'
-          
+          const prenomVal = prof.prenom || 'Membre'
+          const nomVal = prof.nom ? prof.nom.toUpperCase() : ''
+          const prenomNom = `${prenomVal} ${nomVal}`.trim()
+
           item.innerHTML = `
             <div class="profile-info">
               <span class="profile-name">${prenomNom}</span>
-              <span class="profile-time">${date}</span>
+              <span class="profile-time">actif</span>
             </div>
             <div class="profile-right">
               <div class="profile-dot"></div>
