@@ -24,7 +24,7 @@
       overflow: hidden;
     }
 
-    /* Sidebar (avec sa carte blanche d'origine) */
+    /* Sidebar principale */
     .sidebar-card {
       background: #ffffff;
       border: 1px solid #f1f5f9;
@@ -36,6 +36,7 @@
       flex-direction: column;
       justify-content: space-between;
       flex-shrink: 0;
+      z-index: 10;
     }
 
     .user-header { color: #E95300; font-size: 26px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; word-break: break-word; }
@@ -44,9 +45,20 @@
     .nav-link { 
       padding: 12px 18px; border-radius: 12px; color: #64748b; font-weight: 600; 
       text-decoration: none; transition: all 0.2s; 
+      display: flex; justify-content: space-between; align-items: center;
     }
     .nav-link:hover { background: #f8fafc; color: #E95300; }
     .nav-link.active { background: #E95300; color: #ffffff; box-shadow: 0 4px 12px rgba(233, 83, 0, 0.3); }
+
+    /* Flèche de l'onglet messagerie admin */
+    .nav-link .menu-arrow {
+      font-size: 16px;
+      font-weight: 900;
+      transition: transform 0.2s;
+    }
+    .nav-link.active .menu-arrow {
+      transform: rotate(0deg);
+    }
 
     .btn-logout { 
       background: #f1f5f9; color: #64748b; border: none; padding: 12px; 
@@ -80,21 +92,6 @@
 
     .chat-header span { color: #E95300; text-transform: uppercase; }
 
-    /* Bouton profils (Admin) */
-    .btn-profiles-toggle {
-      background: #f1f5f9;
-      color: #E95300;
-      border: 1px solid #e2e8f0;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      display: none;
-      transition: 0.2s;
-    }
-    .btn-profiles-toggle:hover { background: #E95300; color: white; border-color: #E95300; }
-
     /* Zone des messages */
     .chat-messages {
       flex: 1;
@@ -114,15 +111,14 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      word-break: break-word; /* Évite que les longs mots dépassent */
+      word-break: break-word;
       overflow-wrap: break-word;
     }
 
     .message span:first-child {
-      white-space: pre-wrap; /* Conserve les sauts de ligne écrits par l'utilisateur */
+      white-space: pre-wrap;
     }
 
-    /* Message reçu du profil sélectionné (gris à gauche) */
     .message.client {
       background: #f1f5f9;
       color: #1e293b;
@@ -131,7 +127,6 @@
       border: 1px solid #e2e8f0;
     }
 
-    /* Message envoyé par l'admin (orange à droite) */
     .message.admin {
       background: #E95300;
       color: white;
@@ -147,10 +142,10 @@
     .message.client .message-time { color: #64748b; }
     .message.admin .message-time { color: rgba(255, 255, 255, 0.8); }
 
-    /* Barre de saisie avec bouton rond à l'intérieur */
+    /* Barre de saisie */
     .chat-input-form {
       display: flex;
-      align-items: flex-end; /* Aligne le bouton en bas si le textarea grandit */
+      align-items: flex-end;
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 16px;
@@ -168,7 +163,7 @@
       font-size: 14px;
       color: #1e293b;
       padding: 8px 0;
-      resize: none; /* Empêche l'utilisateur de redimensionner manuellement la zone */
+      resize: none;
       max-height: 100px;
       line-height: 1.4;
       background: transparent;
@@ -192,62 +187,57 @@
     .chat-input-form button:hover { opacity: 0.9; transform: scale(1.05); }
     .chat-input-form button svg { width: 16px; height: 16px; fill: currentColor; transform: rotate(45deg); margin-right: 2px; }
 
-    /* POPUP PROFIL - STYLE GLASMORPHISME iOS */
-    .profiles-modal {
+    /* DEUXIÈME SIDEBAR EN VERRE TRANSPARENT FLOU (Même taille que .sidebar-card) */
+    .profiles-sidebar {
       position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.15);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-    }
-    .profiles-modal.active { display: flex; }
-
-    .profiles-card {
-      background: rgba(255, 255, 255, 0.82);
+      top: 35px;
+      left: 35px;
+      width: 300px;
+      height: calc(100% - 70px);
+      background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      width: 420px;
-      max-height: 85%;
-      border-radius: 24px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
-      padding: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 30px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      z-index: 20;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
+    }
+    .profiles-sidebar.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
     }
 
-    @keyframes scaleUp {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .profiles-card-header {
+    .profiles-sidebar-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
       padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
 
-    .profiles-card-header h2 {
+    .profiles-sidebar-header h2 {
       color: #E95300;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 900;
+      text-transform: uppercase;
     }
 
-    .btn-close-modal {
+    .btn-close-sidebar {
       background: rgba(0, 0, 0, 0.04);
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
       color: #1e293b;
       font-weight: bold;
@@ -256,7 +246,7 @@
       align-items: center;
       transition: 0.2s;
     }
-    .btn-close-modal:hover { background: #fee2e2; color: #dc2626; }
+    .btn-close-sidebar:hover { background: #fee2e2; color: #dc2626; }
 
     .profiles-list {
       flex: 1;
@@ -271,7 +261,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.8);
@@ -282,33 +272,27 @@
     .profile-item.active-chat { background: #fff4f0; border-color: #E95300; box-shadow: 0 4px 12px rgba(233, 83, 0, 0.1); }
 
     .profile-info { display: flex; flex-direction: column; gap: 2px; }
-    .profile-name { font-weight: 700; color: #1e293b; font-size: 14px; text-transform: capitalize; }
+    .profile-name { font-weight: 700; color: #1e293b; font-size: 13px; text-transform: capitalize; }
     .profile-time { font-size: 11px; color: #64748b; }
 
     .profile-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .profile-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       background-color: #E95300;
       border-radius: 50%;
-    }
-
-    .profile-arrow {
-      font-size: 14px;
-      color: #E95300;
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- Sidebar -->
+    <!-- Sidebar principale -->
     <div class="sidebar-card">
       <div>
         <h2 class="user-header" id="user-fullname">...</h2>
@@ -317,7 +301,10 @@
           <a href="progression.html" class="nav-link">progression</a>
           <a href="programme.html" class="nav-link">programme</a>
           <a href="nutrition.html" class="nav-link">nutrition</a>
-          <a href="messagerie.html" class="nav-link active">messagerie</a>
+          <a href="#" id="nav-messagerie" class="nav-link active">
+            <span>messagerie</span>
+            <span class="menu-arrow" id="menu-arrow" style="display: none;">></span>
+          </a>
           <a href="contrat.html" class="nav-link">contrat</a>
           <a href="parametre.html" class="nav-link">paramètre</a>
         </nav>
@@ -325,11 +312,21 @@
       <button id="btn-logout" class="btn-logout">Se déconnecter</button>
     </div>
 
+    <!-- Deuxième Sidebar en verre transparent (Admin uniquement) -->
+    <div id="profiles-sidebar" class="profiles-sidebar">
+      <div class="profiles-sidebar-header">
+        <h2>conversations</h2>
+        <button id="btn-close-sidebar" class="btn-close-sidebar">✕</button>
+      </div>
+      <div id="profiles-list" class="profiles-list">
+        <!-- Liste injectée dynamiquement -->
+      </div>
+    </div>
+
     <!-- Contenu Droite : Messagerie -->
     <div class="main-content">
       <div class="chat-header-container">
         <h1 class="chat-header" id="chat-title">Discussion avec <span>...</span></h1>
-        <button id="btn-open-profiles" class="btn-profiles-toggle">profils</button>
       </div>
       
       <div id="chat-messages" class="chat-messages">
@@ -342,19 +339,6 @@
           <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
       </form>
-    </div>
-  </div>
-
-  <!-- MODALE POPUP PROFIL (Glassmorphism iOS) -->
-  <div id="profiles-modal" class="profiles-modal">
-    <div class="profiles-card">
-      <div class="profiles-card-header">
-        <h2>profils</h2>
-        <button id="btn-close-modal" class="btn-close-modal">✕</button>
-      </div>
-      <div id="profiles-list" class="profiles-list">
-        <!-- Liste injectée dynamiquement -->
-      </div>
     </div>
   </div>
 
@@ -394,7 +378,8 @@
         
         if (profileData.admin === true) {
           isUserAdmin = true
-          document.getElementById('btn-open-profiles').style.display = 'block'
+          // Afficher la flèche sur l'onglet messagerie pour l'admin
+          document.getElementById('menu-arrow').style.display = 'inline-block'
           loadMembersList()
         } else {
           activeTargetUserId = currentUser.id
@@ -443,7 +428,6 @@
             </div>
             <div class="profile-right">
               <div class="profile-dot"></div>
-              <span class="profile-arrow">></span>
             </div>
           `
 
@@ -456,13 +440,14 @@
             loadMessages(activeTargetUserId)
             subscribeToMessages(activeTargetUserId)
             
-            document.getElementById('profiles-modal').classList.remove('active')
+            // Fermer la sidebar après sélection
+            document.getElementById('profiles-sidebar').classList.remove('active')
           }
 
           listContainer.appendChild(item)
         })
       } else {
-        listContainer.innerHTML = '<div style="padding: 30px; color: #64748b; text-align: center; font-size: 14px; font-weight: 600;">aucun profil disponible</div>'
+        listContainer.innerHTML = '<div style="padding: 30px; color: #64748b; text-align: center; font-size: 13px; font-weight: 600;">aucun profil disponible</div>'
       }
     }
 
@@ -536,7 +521,6 @@
       container.scrollTop = container.scrollHeight
     }
 
-    // Gestion du textarea : Envoyer avec Entrée (sans Shift), et aller à la ligne avec Shift + Entrée
     const textarea = document.getElementById('message-input')
     
     textarea.addEventListener('keydown', (e) => {
@@ -546,14 +530,13 @@
       }
     })
 
-    // --- ENVOI DE MESSAGE ---
     document.getElementById('chat-form').addEventListener('submit', async (e) => {
       e.preventDefault()
       const content = textarea.value.trim()
       if (!content || !activeTargetUserId) return
 
       textarea.value = ''
-      textarea.style.height = 'auto' // Réinitialise la hauteur du textarea
+      textarea.style.height = 'auto'
 
       const senderType = isUserAdmin ? 'admin' : 'client'
 
@@ -568,13 +551,17 @@
       }
     })
 
-    // --- ÉVÈNEMENTS INTERFACE (MODALE) ---
-    document.getElementById('btn-open-profiles').onclick = () => {
-      document.getElementById('profiles-modal').classList.add('active')
+    // --- GESTION DE LA SECONDE SIDEBAR (ADMIN) ---
+    document.getElementById('nav-messagerie').onclick = (e) => {
+      if (isUserAdmin) {
+        e.preventDefault()
+        const sidebar = document.getElementById('profiles-sidebar')
+        sidebar.classList.toggle('active')
+      }
     }
 
-    document.getElementById('btn-close-modal').onclick = () => {
-      document.getElementById('profiles-modal').classList.remove('active')
+    document.getElementById('btn-close-sidebar').onclick = () => {
+      document.getElementById('profiles-sidebar').classList.remove('active')
     }
 
     document.getElementById('btn-logout').onclick = () => { 
