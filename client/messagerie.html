@@ -50,7 +50,6 @@
     .nav-link:hover { background: #f8fafc; color: #E95300; }
     .nav-link.active { background: #E95300; color: #ffffff; box-shadow: 0 4px 12px rgba(233, 83, 0, 0.3); }
 
-    /* Flèche de l'onglet messagerie admin */
     .nav-link .menu-arrow {
       font-size: 16px;
       font-weight: 900;
@@ -119,8 +118,15 @@
       white-space: pre-wrap;
     }
 
-    /* VUE CLIENT : Ce que l'admin envoie (ou l'hôte) apparaît à gauche en gris */
-    .message.admin {
+    /* Styles de base pour les bulles */
+    .message.client-bubble {
+      background: #E95300;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.admin-bubble {
       background: #f1f5f9;
       color: #1e293b;
       align-self: flex-start;
@@ -128,21 +134,13 @@
       border: 1px solid #e2e8f0;
     }
 
-    /* VUE CLIENT : Ce que le client envoie apparaît à droite en orange */
-    .message.client {
-      background: #E95300;
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-
     .message-time {
       font-size: 10px;
       align-self: flex-end;
       font-weight: 500;
     }
-    .message.admin .message-time { color: #64748b; }
-    .message.client .message-time { color: rgba(255, 255, 255, 0.8); }
+    .message.admin-bubble .message-time { color: #64748b; }
+    .message.client-bubble .message-time { color: rgba(255, 255, 255, 0.8); }
 
     /* Barre de saisie */
     .chat-input-form {
@@ -530,9 +528,7 @@
         }, payload => {
           appendMessage(payload.new)
           
-          if (!isUserAdmin) {
-            // Côté client, si l'admin répond, on met à jour la vue en direct
-          } else {
+          if (isUserAdmin) {
             const prof = globalProfilesData.find(p => p.id === targetId)
             if (prof) {
               prof.lastMessageTime = new Date(payload.new.created_at)
@@ -557,14 +553,12 @@
       const container = document.getElementById('chat-messages')
       const div = document.createElement('div')
       
-      // Inverse l'affichage visuel selon si on est admin ou client
-      // Pour l'admin : .admin = orange (droite), .client = gris (gauche)
-      // Pour le client : .client = orange (droite), .admin = gris (gauche)
       if (isUserAdmin) {
-        div.className = `message ${msg.sender === 'admin' ? 'admin' : 'client'}`
-        // Ajuste les classes CSS internes pour correspondre à la vue admin
+        // Côté ADMIN : .admin = orange à droite, .client = gris à gauche (inchangé)
+        div.className = `message ${msg.sender === 'admin' ? 'client-bubble' : 'admin-bubble'}`
       } else {
-        div.className = `message ${msg.sender === 'client' ? 'client' : 'admin'}`
+        // Côté CLIENT : .client = orange à droite, .admin = gris à gauche (inversé)
+        div.className = `message ${msg.sender === 'client' ? 'client-bubble' : 'admin-bubble'}`
       }
 
       const date = msg.created_at ? new Date(msg.created_at) : new Date()
