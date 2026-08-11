@@ -397,11 +397,11 @@
             .single()
 
           if (adminData) {
-            const adminPrenom = adminData.prenom || "Admin"
+            const adminPrenom = adminData.prenom || "Antoine"
             const adminNom = adminData.nom ? adminData.nom.toUpperCase() : ""
             document.getElementById('chat-title').innerHTML = `Discussion avec <span>${adminPrenom} ${adminNom}</span>`.trim()
           } else {
-            document.getElementById('chat-title').innerHTML = 'Discussion avec <span>Coach</span>'
+            document.getElementById('chat-title').innerHTML = 'Discussion avec <span>Antoine</span>'
           }
 
           loadMessages(activeTargetUserId)
