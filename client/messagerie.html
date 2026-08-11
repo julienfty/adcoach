@@ -119,7 +119,8 @@
       white-space: pre-wrap;
     }
 
-    .message.client {
+    /* VUE CLIENT : Ce que l'admin envoie (ou l'hôte) apparaît à gauche en gris */
+    .message.admin {
       background: #f1f5f9;
       color: #1e293b;
       align-self: flex-start;
@@ -127,7 +128,8 @@
       border: 1px solid #e2e8f0;
     }
 
-    .message.admin {
+    /* VUE CLIENT : Ce que le client envoie apparaît à droite en orange */
+    .message.client {
       background: #E95300;
       color: white;
       align-self: flex-end;
@@ -139,8 +141,8 @@
       align-self: flex-end;
       font-weight: 500;
     }
-    .message.client .message-time { color: #64748b; }
-    .message.admin .message-time { color: rgba(255, 255, 255, 0.8); }
+    .message.admin .message-time { color: #64748b; }
+    .message.client .message-time { color: rgba(255, 255, 255, 0.8); }
 
     /* Barre de saisie */
     .chat-input-form {
@@ -286,7 +288,7 @@
       height: 8px;
       background-color: #E95300;
       border-radius: 50%;
-      display: none; /* Masqué par défaut, géré en JS */
+      display: none;
     }
     .profile-dot.visible {
       display: block;
@@ -386,6 +388,7 @@
           document.getElementById('menu-arrow').style.display = 'inline-block'
           await loadMembersList()
         } else {
+          isUserAdmin = false
           activeTargetUserId = currentUser.id
           document.getElementById('chat-title').innerHTML = 'Discussion avec <span>l\'hôte</span>'
           loadMessages(activeTargetUserId)
@@ -408,7 +411,6 @@
       }
 
       if (profiles && profiles.length > 0) {
-        // Récupérer pour chaque profil son dernier message et sa date
         globalProfilesData = await Promise.all(profiles.map(async (prof) => {
           const { data: msgData } = await supabase
             .from('messages')
@@ -426,7 +428,6 @@
           }
         }))
 
-        // Trier du plus récent au plus ancien
         globalProfilesData.sort((a, b) => b.lastMessageTime - a.lastMessageTime)
 
         activeTargetUserId = globalProfilesData[0].id
@@ -452,7 +453,6 @@
           const nomVal = prof.nom ? prof.nom.toUpperCase() : ''
           const prenomNom = `${prenomVal} ${nomVal}`.trim()
 
-          // Le point orange s'affiche si le dernier message vient du client
           const hasUnread = prof.lastMessageSender === 'client'
 
           item.innerHTML = `
@@ -472,10 +472,9 @@
             activeTargetUserId = prof.id
             updateChatHeader(prof)
             
-            // Masquer le point orange localement dès la lecture
             const dot = document.getElementById(`dot-${prof.id}`)
             if (dot) dot.classList.remove('visible')
-            prof.lastMessageSender = 'admin' // Considéré comme lu/répondu
+            prof.lastMessageSender = 'admin'
 
             loadMessages(activeTargetUserId)
             subscribeToMessages(activeTargetUserId)
@@ -531,19 +530,21 @@
         }, payload => {
           appendMessage(payload.new)
           
-          // Mettre à jour l'état du profil en temps réel si un nouveau message arrive
-          const prof = globalProfilesData.find(p => p.id === targetId)
-          if (prof) {
-            prof.lastMessageTime = new Date(payload.new.created_at)
-            prof.lastMessageString = prof.lastMessageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            prof.lastMessageSender = payload.new.sender
-            
-            // Si c'est l'admin qui regarde et que le message vient du client, afficher le point
-            if (isUserAdmin && payload.new.sender === 'client' && activeTargetUserId !== targetId) {
-              const dot = document.getElementById(`dot-${targetId}`)
-              if (dot) dot.classList.add('visible')
+          if (!isUserAdmin) {
+            // Côté client, si l'admin répond, on met à jour la vue en direct
+          } else {
+            const prof = globalProfilesData.find(p => p.id === targetId)
+            if (prof) {
+              prof.lastMessageTime = new Date(payload.new.created_at)
+              prof.lastMessageString = prof.lastMessageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              prof.lastMessageSender = payload.new.sender
+              
+              if (payload.new.sender === 'client' && activeTargetUserId !== targetId) {
+                const dot = document.getElementById(`dot-${targetId}`)
+                if (dot) dot.classList.add('visible')
+              }
+              renderProfilesList()
             }
-            renderProfilesList()
           }
         })
         .subscribe()
@@ -556,7 +557,15 @@
       const container = document.getElementById('chat-messages')
       const div = document.createElement('div')
       
-      div.className = `message ${msg.sender}`
+      // Inverse l'affichage visuel selon si on est admin ou client
+      // Pour l'admin : .admin = orange (droite), .client = gris (gauche)
+      // Pour le client : .client = orange (droite), .admin = gris (gauche)
+      if (isUserAdmin) {
+        div.className = `message ${msg.sender === 'admin' ? 'admin' : 'client'}`
+        // Ajuste les classes CSS internes pour correspondre à la vue admin
+      } else {
+        div.className = `message ${msg.sender === 'client' ? 'client' : 'admin'}`
+      }
 
       const date = msg.created_at ? new Date(msg.created_at) : new Date()
       const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -603,13 +612,14 @@
       } else if (data && data.length > 0) {
         appendMessage(data[0])
 
-        // Mettre à jour l'heure et l'expéditeur du dernier message pour le profil actif
-        const prof = globalProfilesData.find(p => p.id === activeTargetUserId)
-        if (prof) {
-          prof.lastMessageTime = new Date(data[0].created_at)
-          prof.lastMessageString = prof.lastMessageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          prof.lastMessageSender = senderType
-          renderProfilesList()
+        if (isUserAdmin) {
+          const prof = globalProfilesData.find(p => p.id === activeTargetUserId)
+          if (prof) {
+            prof.lastMessageTime = new Date(data[0].created_at)
+            prof.lastMessageString = prof.lastMessageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            prof.lastMessageSender = senderType
+            renderProfilesList()
+          }
         }
       }
     })
