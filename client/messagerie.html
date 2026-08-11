@@ -118,7 +118,6 @@
       white-space: pre-wrap;
     }
 
-    /* Styles de base pour les bulles */
     .message.client-bubble {
       background: #E95300;
       color: white;
@@ -388,7 +387,23 @@
         } else {
           isUserAdmin = false
           activeTargetUserId = currentUser.id
-          document.getElementById('chat-title').innerHTML = 'Discussion avec <span>l\'hôte</span>'
+          
+          // Récupérer le profil de l'admin pour l'afficher dans l'en-tête du client
+          const { data: adminData } = await supabase
+            .from('profiles')
+            .select('prenom, nom')
+            .eq('admin', true)
+            .limit(1)
+            .single()
+
+          if (adminData) {
+            const adminPrenom = adminData.prenom || "Admin"
+            const adminNom = adminData.nom ? adminData.nom.toUpperCase() : ""
+            document.getElementById('chat-title').innerHTML = `Discussion avec <span>${adminPrenom} ${adminNom}</span>`.trim()
+          } else {
+            document.getElementById('chat-title').innerHTML = 'Discussion avec <span>Coach</span>'
+          }
+
           loadMessages(activeTargetUserId)
           subscribeToMessages(activeTargetUserId)
         }
@@ -554,10 +569,8 @@
       const div = document.createElement('div')
       
       if (isUserAdmin) {
-        // Côté ADMIN : .admin = orange à droite, .client = gris à gauche (inchangé)
         div.className = `message ${msg.sender === 'admin' ? 'client-bubble' : 'admin-bubble'}`
       } else {
-        // Côté CLIENT : .client = orange à droite, .admin = gris à gauche (inversé)
         div.className = `message ${msg.sender === 'client' ? 'client-bubble' : 'admin-bubble'}`
       }
 
