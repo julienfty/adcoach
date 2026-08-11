@@ -24,7 +24,7 @@
       overflow: hidden;
     }
 
-    /* Sidebar */
+    /* Sidebar (avec sa carte blanche d'origine) */
     .sidebar-card {
       background: #ffffff;
       border: 1px solid #f1f5f9;
@@ -38,7 +38,7 @@
       flex-shrink: 0;
     }
 
-    .user-header { color: #E95300; font-size: 26px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; }
+    .user-header { color: #E95300; font-size: 26px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; word-break: break-word; }
 
     .nav-links { display: flex; flex-direction: column; gap: 10px; }
     .nav-link { 
@@ -73,12 +73,12 @@
     }
 
     .chat-header {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: bold;
       color: #1e293b;
     }
 
-    .chat-header span { color: #E95300; }
+    .chat-header span { color: #E95300; text-transform: uppercase; }
 
     /* Bouton profils (Admin) */
     .btn-profiles-toggle {
@@ -102,12 +102,12 @@
       padding: 10px 5px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
 
     .message {
       max-width: 75%;
-      padding: 12px 16px;
+      padding: 14px 18px;
       border-radius: 16px;
       font-size: 14px;
       line-height: 1.4;
@@ -116,14 +116,8 @@
       gap: 4px;
     }
 
+    /* Message reçu du profil sélectionné (gris à gauche) */
     .message.client {
-      background: #E95300;
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-
-    .message.admin {
       background: #f1f5f9;
       color: #1e293b;
       align-self: flex-start;
@@ -131,22 +125,30 @@
       border: 1px solid #e2e8f0;
     }
 
+    /* Message envoyé par l'admin (orange à droite) */
+    .message.admin {
+      background: #E95300;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
     .message-time {
       font-size: 10px;
       align-self: flex-end;
       font-weight: 500;
     }
-    .message.client .message-time { color: rgba(255, 255, 255, 0.8); }
-    .message.admin .message-time { color: #64748b; }
+    .message.client .message-time { color: #64748b; }
+    .message.admin .message-time { color: rgba(255, 255, 255, 0.8); }
 
-    /* Barre de saisie */
+    /* Barre de saisie avec bouton rond à l'intérieur */
     .chat-input-form {
       display: flex;
       align-items: center;
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 16px;
-      padding: 8px 12px;
+      padding: 6px 6px 6px 16px;
       gap: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
       margin-top: 15px;
@@ -159,16 +161,16 @@
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       color: #1e293b;
-      padding: 8px;
+      padding: 8px 0;
     }
 
     .chat-input-form button {
       background: #E95300;
       color: white;
       border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -176,7 +178,7 @@
       transition: 0.2s;
     }
     .chat-input-form button:hover { opacity: 0.9; transform: scale(1.05); }
-    .chat-input-form button svg { width: 18px; height: 18px; fill: currentColor; }
+    .chat-input-form button svg { width: 16px; height: 16px; fill: currentColor; transform: rotate(45deg); margin-right: 2px; }
 
     /* POPUP PROFIL - STYLE GLASMORPHISME iOS */
     .profiles-modal {
@@ -314,7 +316,7 @@
     <!-- Contenu Droite : Messagerie -->
     <div class="main-content">
       <div class="chat-header-container">
-        <h1 class="chat-header" id="chat-title">Discussion avec <span>Antoine</span></h1>
+        <h1 class="chat-header" id="chat-title">Discussion avec <span>...</span></h1>
         <button id="btn-open-profiles" class="btn-profiles-toggle">profils</button>
       </div>
       
@@ -362,15 +364,11 @@
       }
 
       currentUser = session.user
-      const meta = currentUser.user_metadata || {}
-      const p = meta.prenom || "Champion"
-      const n = meta.nom || "NOM"
-      document.getElementById('user-fullname').innerText = `${p} ${n.toUpperCase()}`
-
-      // Vérification du statut admin
+      
+      // Récupération de l'ID et des infos de la table profiles pour l'affichage de l'utilisateur connecté
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('admin')
+        .select('admin, prenom, nom')
         .eq('id', currentUser.id)
         .single()
 
@@ -378,18 +376,23 @@
         console.error("Erreur récupération profil:", profileError)
       }
 
-      if (profileData && profileData.admin === true) {
-        isUserAdmin = true
-        document.getElementById('user-fullname').innerText = "hôté" 
-        document.getElementById('btn-open-profiles').style.display = 'block'
+      // Affichage dynamique (Prénom NOM de l'utilisateur connecté dans la sidebar)
+      if (profileData) {
+        const p = profileData.prenom || "Champion"
+        const n = profileData.nom ? profileData.nom.toUpperCase() : ""
+        document.getElementById('user-fullname').innerText = `${p} ${n}`.trim()
         
-        loadMembersList()
-      } else {
-        // Pour un client, sa propre discussion est active
-        activeTargetUserId = currentUser.id
-        document.getElementById('chat-title').innerHTML = 'Discussion avec <span>l\'hôte</span>'
-        loadMessages(activeTargetUserId)
-        subscribeToMessages(activeTargetUserId)
+        if (profileData.admin === true) {
+          isUserAdmin = true
+          document.getElementById('btn-open-profiles').style.display = 'block'
+          loadMembersList()
+        } else {
+          // Pour un client, sa propre discussion est active avec l'hôte
+          activeTargetUserId = currentUser.id
+          document.getElementById('chat-title').innerHTML = 'Discussion avec <span>l\'hôte</span>'
+          loadMessages(activeTargetUserId)
+          subscribeToMessages(activeTargetUserId)
+        }
       }
     }
 
@@ -455,9 +458,11 @@
       }
     }
 
+    // Mise à jour dynamique du titre avec Prénom NOM du profil sélectionné
     function updateChatHeader(prof) {
       const prenom = prof.prenom || 'Client'
-      document.getElementById('chat-title').innerHTML = `Discussion avec <span>${prenom}</span>`
+      const nom = prof.nom ? prof.nom.toUpperCase() : ''
+      document.getElementById('chat-title').innerHTML = `Discussion avec <span>${prenom} ${nom}</span>`
     }
 
     // --- GESTION DES MESSAGES ---
