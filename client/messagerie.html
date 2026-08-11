@@ -24,7 +24,7 @@
       overflow: hidden;
     }
 
-    /* Sidebar (avec sa carte blanche d'origine) */
+    /* Sidebar (carte blanche d'origine) */
     .sidebar-card {
       background: #ffffff;
       border: 1px solid #f1f5f9;
@@ -113,7 +113,7 @@
       line-height: 1.4;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
 
     /* Message reçu du profil sélectionné (gris à gauche) */
@@ -132,14 +132,6 @@
       align-self: flex-end;
       border-bottom-right-radius: 4px;
     }
-
-    .message-time {
-      font-size: 10px;
-      align-self: flex-end;
-      font-weight: 500;
-    }
-    .message.client .message-time { color: #64748b; }
-    .message.admin .message-time { color: rgba(255, 255, 255, 0.8); }
 
     /* Barre de saisie avec bouton rond à l'intérieur */
     .chat-input-form {
@@ -365,7 +357,6 @@
 
       currentUser = session.user
       
-      // Récupération de l'ID et des infos de la table profiles pour l'affichage de l'utilisateur connecté
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('admin, prenom, nom')
@@ -376,7 +367,6 @@
         console.error("Erreur récupération profil:", profileError)
       }
 
-      // Affichage dynamique (Prénom NOM de l'utilisateur connecté dans la sidebar)
       if (profileData) {
         const p = profileData.prenom || "Champion"
         const n = profileData.nom ? profileData.nom.toUpperCase() : ""
@@ -387,7 +377,6 @@
           document.getElementById('btn-open-profiles').style.display = 'block'
           loadMembersList()
         } else {
-          // Pour un client, sa propre discussion est active avec l'hôte
           activeTargetUserId = currentUser.id
           document.getElementById('chat-title').innerHTML = 'Discussion avec <span>l\'hôte</span>'
           loadMessages(activeTargetUserId)
@@ -396,7 +385,6 @@
       }
     }
 
-    // --- LOGIQUE ADMIN : CHARGEMENT DES PROFILS ---
     async function loadMembersList() {
       const { data: profiles, error } = await supabase
         .from('profiles')
@@ -458,14 +446,12 @@
       }
     }
 
-    // Mise à jour dynamique du titre avec Prénom NOM du profil sélectionné
     function updateChatHeader(prof) {
       const prenom = prof.prenom || 'Client'
       const nom = prof.nom ? prof.nom.toUpperCase() : ''
       document.getElementById('chat-title').innerHTML = `Discussion avec <span>${prenom} ${nom}</span>`
     }
 
-    // --- GESTION DES MESSAGES ---
     async function loadMessages(targetId) {
       const { data, error } = await supabase
         .from('messages')
@@ -513,24 +499,15 @@
       
       div.className = `message ${msg.sender}`
 
-      const date = msg.created_at ? new Date(msg.created_at) : new Date()
-      const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-
       const textSpan = document.createElement('span')
       textSpan.textContent = msg.content
 
-      const timeSpan = document.createElement('span')
-      timeSpan.className = 'message-time'
-      timeSpan.textContent = timeString
-
       div.appendChild(textSpan)
-      div.appendChild(timeSpan)
 
       container.appendChild(div)
       container.scrollTop = container.scrollHeight
     }
 
-    // --- ENVOI DE MESSAGE ---
     document.getElementById('chat-form').addEventListener('submit', async (e) => {
       e.preventDefault()
       const input = document.getElementById('message-input')
@@ -552,7 +529,6 @@
       }
     })
 
-    // --- ÉVÈNEMENTS INTERFACE (MODALE) ---
     document.getElementById('btn-open-profiles').onclick = () => {
       document.getElementById('profiles-modal').classList.add('active')
     }
