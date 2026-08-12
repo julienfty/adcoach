@@ -188,23 +188,38 @@
     async function renderAdminUsersList(currentAdminId) {
       const contentDisplay = document.getElementById('content-display')
       
-      // Jointure Supabase : Récupération de profiles avec profils_details
-      const { data: members, error } = await supabase
+      // 1. Récupération des profils
+      const { data: members, error: errProfiles } = await supabase
         .from('profiles')
-        .select('*, profils_details(*)')
+        .select('*')
         .eq('questionnaire', true)
         .eq('payement', true)
         .neq('id', currentAdminId)
 
-      if (error) {
-        console.error("Erreur chargement membres:", error)
-        contentDisplay.innerHTML = '<p style="color: #64748b; font-weight: 600;">Erreur lors du chargement de la liste.</p>'
+      if (errProfiles) {
+        console.error("Erreur chargement membres:", errProfiles)
+        contentDisplay.innerHTML = '<p style="color: #64748b; font-weight: 600;">Erreur lors du chargement des profils.</p>'
         return
       }
 
       if (!members || members.length === 0) {
         contentDisplay.innerHTML = '<p style="color: #64748b; font-weight: 600; text-align: center; margin-top: 50px;">Aucun membre enregistré pour le moment.</p>'
         return
+      }
+
+      // 2. Récupération des détails
+      const userIds = members.map(m => m.id)
+      const { data: detailsList, error: errDetails } = await supabase
+        .from('profils_details')
+        .select('*')
+        .in('user_id', userIds)
+
+      if (errDetails) console.error("Erreur détails:", errDetails)
+
+      // Associer chaque detail à son utilisateur[cite: 1]
+      const detailsMap = {}
+      if (detailsList) {
+        detailsList.forEach(d => { detailsMap[d.user_id] = d })
       }
 
       const listContainer = document.createElement('div')
@@ -214,16 +229,15 @@
         const row = document.createElement('div')
         row.className = 'user-row'
 
-        // profils_details peut être un objet ou un tableau de 1 élément selon tes relations Supabase
-        const details = Array.isArray(member.profils_details) ? member.profils_details[0] : member.profils_details
+        const details = detailsMap[member.id] || {}
 
         const p = member.prenom || "Membre"
         const n = member.nom ? member.nom.toUpperCase() : ""
-        const age = details?.age ? `${details.age} ans` : "-- ans"
-        const taille = details?.taille ? `${details.taille} cm` : "-- cm"
-        const poids = details?.poid_initiale ? `${details.poid_initiale} kg` : "-- kg"
-        const metier = details?.metier || "--"
-        const objectif = details?.objectif || "--"
+        const age = details.age ? `${details.age} ans` : "-- ans"
+        const taille = details.taille ? `${details.taille} cm` : "-- cm"
+        const poids = details.poid_initiale ? `${details.poid_initiale} kg` : "-- kg"
+        const metier = details.metier || "--"
+        const objectif = details.objectif || "--"
 
         row.innerHTML = `
           <span class="user-row-name">${p} ${n}</span>
