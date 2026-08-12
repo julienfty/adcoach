@@ -164,7 +164,7 @@
 
       const userId = session.user.id
 
-      // Récupération du profil complet de l'utilisateur connecté
+      // Récupération du profil
       const { data: userProfile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -179,7 +179,7 @@
       document.getElementById('user-prenom').innerText = prenom
       document.getElementById('user-fullname').innerText = `${prenom} ${nom.toUpperCase()}`.trim()
 
-      // Si l'utilisateur est un Admin -> Afficher la liste des membres
+      // Si l'utilisateur est un Admin
       if (userProfile && userProfile.admin === true) {
         await renderAdminUsersList(userId)
       }
@@ -188,10 +188,10 @@
     async function renderAdminUsersList(currentAdminId) {
       const contentDisplay = document.getElementById('content-display')
       
-      // Récupérer tous les utilisateurs validés (questionnaire et paiement OK) sauf l'admin
+      // Jointure Supabase : Récupération de profiles avec profils_details
       const { data: members, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*, profils_details(*)')
         .eq('questionnaire', true)
         .eq('payement', true)
         .neq('id', currentAdminId)
@@ -207,7 +207,6 @@
         return
       }
 
-      // Création du conteneur de liste
       const listContainer = document.createElement('div')
       listContainer.className = 'admin-list-container'
 
@@ -215,13 +214,16 @@
         const row = document.createElement('div')
         row.className = 'user-row'
 
+        // profils_details peut être un objet ou un tableau de 1 élément selon tes relations Supabase
+        const details = Array.isArray(member.profils_details) ? member.profils_details[0] : member.profils_details
+
         const p = member.prenom || "Membre"
         const n = member.nom ? member.nom.toUpperCase() : ""
-        const age = member.age ? `${member.age} ans` : "-- ans"
-        const taille = member.taille ? `${member.taille} cm` : "-- cm"
-        const poids = member.poids ? `${member.poids} kg` : "-- kg"
-        const metier = member.metier || "--"
-        const objectif = member.objectif || "--"
+        const age = details?.age ? `${details.age} ans` : "-- ans"
+        const taille = details?.taille ? `${details.taille} cm` : "-- cm"
+        const poids = details?.poid_initiale ? `${details.poid_initiale} kg` : "-- kg"
+        const metier = details?.metier || "--"
+        const objectif = details?.objectif || "--"
 
         row.innerHTML = `
           <span class="user-row-name">${p} ${n}</span>
