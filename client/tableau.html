@@ -32,9 +32,10 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      flex-shrink: 0;
     }
 
-    .user-header { color: #E95300; font-size: 26px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; }
+    .user-header { color: #E95300; font-size: 26px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; word-break: break-word; }
 
     .nav-links { display: flex; flex-direction: column; gap: 10px; }
     .nav-link { 
@@ -50,15 +51,67 @@
     }
     .btn-logout:hover { background: #fee2e2; color: #dc2626; }
     
-    .main-content { flex: 1; display: flex; flex-direction: column; }
-    .title { font-size: 32px; font-weight: bold; color: #1e293b; text-align: right; margin-bottom: 40px; }
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .title { font-size: 32px; font-weight: bold; color: #1e293b; text-align: right; margin-bottom: 30px; }
     .title span { color: #E95300; }
 
+    /* Vue Client - Grille de cartes */
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px; text-decoration: none; transition: 0.2s; }
     .card:hover { border-color: #E95300; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
     .icon svg { width: 32px; height: 32px; fill: #1e293b; }
     .card span { font-weight: 700; color: #1e293b; font-size: 14px; }
+
+    /* Vue Administrateur - Liste des utilisateurs */
+    .admin-list-container {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 6px;
+    }
+
+    .user-row {
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 16px 24px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr 1.5fr;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .user-row:hover {
+      background: #ffffff;
+      border-color: #e2e8f0;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+      transform: translateY(-1px);
+    }
+
+    .user-row-name {
+      font-weight: 800;
+      color: #1e293b;
+      font-size: 14px;
+      text-transform: capitalize;
+    }
+
+    .user-row-info {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-row-info.left {
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -82,13 +135,18 @@
 
     <div class="main-content">
       <h1 class="title">Bonjour, <span id="user-prenom">...</span></h1>
-      <div class="grid">
-        <a href="progression.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div><span>progression</span></a>
-        <a href="programme.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg></div><span>programme</span></a>
-        <a href="nutrition.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg></div><span>nutrition</span></a>
-        <a href="messagerie.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg></div><span>messagerie</span></a>
-        <a href="contrat.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><span>contrat</span></a>
-        <a href="parametre.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div><span>paramètre</span></a>
+      
+      <!-- Zone d'affichage dynamique (Grille Client ou Liste Admin) -->
+      <div id="content-display">
+        <!-- Par défaut : Vue Client -->
+        <div class="grid">
+          <a href="progression.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div><span>progression</span></a>
+          <a href="programme.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M20.5 9.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM3.5 9.5C2.67 9.5 2 10.17 2 11v3c0 .83.67 1.5 1.5 1.5S5 14.83 5 14v-3c0-.83-.67-1.5-1.5-1.5zM7 8h2v8H7zm8 0h2v8h-2zM4 11h2v2H4zm14 0h2v2h-2z"/></svg></div><span>programme</span></a>
+          <a href="nutrition.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1zm-9 8a6 6 0 1 1 6-6 6 6 0 0 1-6 6zm8-2h-1v-4h1z"/></svg></div><span>nutrition</span></a>
+          <a href="messagerie.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg></div><span>messagerie</span></a>
+          <a href="contrat.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div><span>contrat</span></a>
+          <a href="parametre.html" class="card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div><span>paramètre</span></a>
+        </div>
       </div>
     </div>
   </div>
@@ -99,15 +157,93 @@
 
     async function load() {
       const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        const p = session.user.user_metadata?.prenom || "Champion"
-        const n = session.user.user_metadata?.nom || "NOM"
-        document.getElementById('user-prenom').innerText = p
-        document.getElementById('user-fullname').innerText = `${p} ${n.toUpperCase()}`
+      if (!session) {
+        window.location.href = '../index.html'
+        return
+      }
+
+      const userId = session.user.id
+
+      // Récupération du profil complet de l'utilisateur connecté
+      const { data: userProfile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+      if (error) console.error("Erreur profil:", error)
+
+      const prenom = userProfile?.prenom || session.user.user_metadata?.prenom || "Champion"
+      const nom = userProfile?.nom || session.user.user_metadata?.nom || ""
+      
+      document.getElementById('user-prenom').innerText = prenom
+      document.getElementById('user-fullname').innerText = `${prenom} ${nom.toUpperCase()}`.trim()
+
+      // Si l'utilisateur est un Admin -> Afficher la liste des membres
+      if (userProfile && userProfile.admin === true) {
+        await renderAdminUsersList(userId)
       }
     }
+
+    async function renderAdminUsersList(currentAdminId) {
+      const contentDisplay = document.getElementById('content-display')
+      
+      // Récupérer tous les utilisateurs validés (questionnaire et paiement OK) sauf l'admin
+      const { data: members, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('questionnaire', true)
+        .eq('payement', true)
+        .neq('id', currentAdminId)
+
+      if (error) {
+        console.error("Erreur chargement membres:", error)
+        contentDisplay.innerHTML = '<p style="color: #64748b; font-weight: 600;">Erreur lors du chargement de la liste.</p>'
+        return
+      }
+
+      if (!members || members.length === 0) {
+        contentDisplay.innerHTML = '<p style="color: #64748b; font-weight: 600; text-align: center; margin-top: 50px;">Aucun membre enregistré pour le moment.</p>'
+        return
+      }
+
+      // Création du conteneur de liste
+      const listContainer = document.createElement('div')
+      listContainer.className = 'admin-list-container'
+
+      members.forEach(member => {
+        const row = document.createElement('div')
+        row.className = 'user-row'
+
+        const p = member.prenom || "Membre"
+        const n = member.nom ? member.nom.toUpperCase() : ""
+        const age = member.age ? `${member.age} ans` : "-- ans"
+        const taille = member.taille ? `${member.taille} cm` : "-- cm"
+        const poids = member.poids ? `${member.poids} kg` : "-- kg"
+        const metier = member.metier || "--"
+        const objectif = member.objectif || "--"
+
+        row.innerHTML = `
+          <span class="user-row-name">${p} ${n}</span>
+          <span class="user-row-info">${age}</span>
+          <span class="user-row-info">${taille}</span>
+          <span class="user-row-info">${poids}</span>
+          <span class="user-row-info left">${metier}</span>
+          <span class="user-row-info left">${objectif}</span>
+        `
+        listContainer.appendChild(row)
+      })
+
+      contentDisplay.innerHTML = ''
+      contentDisplay.appendChild(listContainer)
+    }
+
     load()
-    document.getElementById('btn-logout').onclick = () => { supabase.auth.signOut(); window.location.href = '../index.html'; }
+
+    document.getElementById('btn-logout').onclick = () => { 
+      supabase.auth.signOut()
+      window.location.href = '../index.html' 
+    }
   </script>
 </body>
 </html>
